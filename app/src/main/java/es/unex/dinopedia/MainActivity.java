@@ -2,6 +2,9 @@ package es.unex.dinopedia;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -11,32 +14,46 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import es.unex.dinopedia.databinding.ActivityMainBinding;
+
 public class MainActivity extends AppCompatActivity{
 
+    ActivityMainBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        replaceFragment(new MainFragment());
 
-        Button bEnciclopedia = findViewById(R.id.bEnciclopedia);
-        Button bCombate = findViewById(R.id.bCombate);
-
-        bEnciclopedia.setOnClickListener(view -> {
-            //Snackbar.make(view, "Remplaza con una acción", Snackbar.LENGTH_LONG)
-            //       .setAction("Action", null).show();
-            Intent intent = new Intent(MainActivity.this, EnciclopediaActivity.class);
-            startActivity(intent);
-        });
-
-
-        bCombate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Snackbar.make(view, "Remplaza con una acción", Snackbar.LENGTH_LONG)
-                //       .setAction("Action", null).show();
-                Intent intent = new Intent(MainActivity.this, CombateActivity.class);
-                startActivity(intent);
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()){
+                case R.id.principal:
+                    replaceFragment(new MainFragment());
+                    break;
+                case R.id.enciclopedia:
+                    replaceFragment(new EnciclopediaFragment());
+                    break;
+                case R.id.batalla:
+                    replaceFragment(new CombateFragment());
+                    break;
+                case R.id.favorito:
+                    replaceFragment(new FavoritoFragment());
+                    break;
+                case R.id.logros:
+                    replaceFragment(new AlbumFragment());
+                    break;
             }
+            return true;
         });
+
+
+    }
+
+    private void replaceFragment(Fragment fragment){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frameLayout, fragment);
+        fragmentTransaction.commit();
     }
 }
