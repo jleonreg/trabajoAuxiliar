@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import es.unex.dinopedia.DinosaurioAdapter;
+
 import es.unex.dinopedia.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity{
@@ -22,6 +24,10 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = new Intent(MainActivity.this, DinosaurioManagerActivity.class);
+        //startActivity(intent);
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         replaceFragment(new MainFragment());
@@ -32,7 +38,7 @@ public class MainActivity extends AppCompatActivity{
                     replaceFragment(new MainFragment());
                     break;
                 case R.id.enciclopedia:
-                    replaceFragment(new EnciclopediaFragment());
+                    replaceFragment(new EnciclopediaFragment(MainActivity.this));
                     break;
                 case R.id.batalla:
                     replaceFragment(new CombateFragment());

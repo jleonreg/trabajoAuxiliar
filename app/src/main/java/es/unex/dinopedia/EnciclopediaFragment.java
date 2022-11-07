@@ -1,12 +1,23 @@
 package es.unex.dinopedia;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.android.material.snackbar.Snackbar;
+
+import java.util.List;
+
+import es.unex.dinopedia.database.DinosaurioCRUD;
+import es.unex.dinopedia.roomdb.DinosaurioDatabase;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,8 +35,14 @@ public class EnciclopediaFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public EnciclopediaFragment() {
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private DinosaurioAdapter mAdapter;
+    private Context context;
+
+    public EnciclopediaFragment(Context cont) {
         // Required empty public constructor
+        context = cont;
     }
 
     /**
@@ -37,8 +54,8 @@ public class EnciclopediaFragment extends Fragment {
      * @return A new instance of fragment EnciclopediaFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static EnciclopediaFragment newInstance(String param1, String param2) {
-        EnciclopediaFragment fragment = new EnciclopediaFragment();
+    public static EnciclopediaFragment newInstance(String param1, String param2, Context context) {
+        EnciclopediaFragment fragment = new EnciclopediaFragment(context);
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -59,6 +76,59 @@ public class EnciclopediaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_enciclopedia, container, false);
+        View viewMain = inflater.inflate(R.layout.fragment_enciclopedia, container, false);
+
+        mRecyclerView = viewMain.findViewById(R.id.my_recycler_view);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        // - Set a Linear Layout Manager to the RecyclerView
+        mLayoutManager = new LinearLayoutManager(context);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // - Create a new Adapter for the RecyclerView
+        // specify an adapter (see also next example)
+        View view = mRecyclerView.findViewById(android.R.id.content);
+        mAdapter = new DinosaurioAdapter(context, new DinosaurioAdapter.OnItemClickListener() {
+            @Override public void onItemClick(Dinosaurio item) {
+                Snackbar.make(view, "Item "+item.getName()+" Clicked", Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+        // - Attach the adapter to the RecyclerView
+        mRecyclerView.setAdapter(mAdapter);
+
+        DinosaurioCRUD crud = DinosaurioCRUD.getInstance(context);
+        DinosaurioDatabase.getInstance(context);
+
+        return viewMain;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Load saved ToDoItems, if necessary
+
+        if (mAdapter.getItemCount() == 0)
+            loadItems();
+    }
+
+    private void loadItems() {
+        DinosaurioCRUD crud = DinosaurioCRUD.getInstance(context);
+        List<Dinosaurio> items = crud.getAll();
+
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Dinosaurio> items = DinosaurioDatabase.getInstance(context).getDao().getAll();
+                mAdapter.load(items);
+                //runOnUiThread( () -> mAdapter.load(items));
+            }
+        });
+
     }
 }
