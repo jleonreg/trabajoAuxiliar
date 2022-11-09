@@ -8,12 +8,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import es.unex.dinopedia.database.DinosaurioCRUD;
@@ -38,11 +40,25 @@ public class EnciclopediaFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private DinosaurioAdapter mAdapter;
-    private Context context;
+    private final Context context;
+    private List<Dinosaurio> dinoList = new ArrayList<>();
 
-    public EnciclopediaFragment(Context cont) {
+    public void lista(List<Dinosaurio> dino){
+        dinoList=new ArrayList<>(dino);
+        //Log.d("DINO", dino.get(0).getName());
+        //
+        //mAdapter.add(new Dinosaurio());
+    }
+
+    public EnciclopediaFragment(Context cont, List<Dinosaurio> dino) {
         // Required empty public constructor
         context = cont;
+        //dinoList = dino;
+        mAdapter = new DinosaurioAdapter(context, new DinosaurioAdapter.OnItemClickListener() {
+            @Override public void onItemClick(Dinosaurio item) {
+                //Snackbar.make(view, "Item "+item.getName()+" Clicked", Snackbar.LENGTH_LONG).show();
+            }
+        });
     }
 
     /**
@@ -54,8 +70,8 @@ public class EnciclopediaFragment extends Fragment {
      * @return A new instance of fragment EnciclopediaFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static EnciclopediaFragment newInstance(String param1, String param2, Context context) {
-        EnciclopediaFragment fragment = new EnciclopediaFragment(context);
+    public static EnciclopediaFragment newInstance(String param1, String param2, Context context, List<Dinosaurio> dino) {
+        EnciclopediaFragment fragment = new EnciclopediaFragment(context, dino);
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -70,6 +86,7 @@ public class EnciclopediaFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
@@ -92,17 +109,15 @@ public class EnciclopediaFragment extends Fragment {
         // - Create a new Adapter for the RecyclerView
         // specify an adapter (see also next example)
         View view = mRecyclerView.findViewById(android.R.id.content);
-        mAdapter = new DinosaurioAdapter(context, new DinosaurioAdapter.OnItemClickListener() {
-            @Override public void onItemClick(Dinosaurio item) {
-                Snackbar.make(view, "Item "+item.getName()+" Clicked", Snackbar.LENGTH_LONG).show();
-            }
-        });
+
+        //mAdapter.add(new Dinosaurio());
+        //mAdapter.load(dinoList);
 
         // - Attach the adapter to the RecyclerView
         mRecyclerView.setAdapter(mAdapter);
 
-        DinosaurioCRUD crud = DinosaurioCRUD.getInstance(context);
-        DinosaurioDatabase.getInstance(context);
+        //DinosaurioCRUD crud = DinosaurioCRUD.getInstance(context);
+        //DinosaurioDatabase.getInstance(context);
 
         return viewMain;
     }
@@ -112,9 +127,12 @@ public class EnciclopediaFragment extends Fragment {
         super.onResume();
 
         // Load saved ToDoItems, if necessary
-
-        if (mAdapter.getItemCount() == 0)
-            loadItems();
+        //lista(dinoList);
+        //if(dinoList.size()!=0)
+        //    mAdapter.add(dinoList.get(0));
+        mAdapter.load(dinoList);
+        //if (mAdapter.getItemCount() == 0)
+            //loadItems();
     }
 
     private void loadItems() {
@@ -125,8 +143,7 @@ public class EnciclopediaFragment extends Fragment {
             @Override
             public void run() {
                 List<Dinosaurio> items = DinosaurioDatabase.getInstance(context).getDao().getAll();
-                mAdapter.load(items);
-                //runOnUiThread( () -> mAdapter.load(items));
+                requireActivity().runOnUiThread( () -> mAdapter.load(items));
             }
         });
 
