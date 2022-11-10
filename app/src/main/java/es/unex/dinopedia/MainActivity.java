@@ -28,6 +28,7 @@ import java.util.List;
 import es.unex.dinopedia.DinosaurioAdapter;
 
 import es.unex.dinopedia.databinding.ActivityMainBinding;
+import es.unex.dinopedia.roomdb.DinosaurioDatabase;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -38,17 +39,19 @@ public class MainActivity extends AppCompatActivity{
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        replaceFragment(new MainFragment());
+        replaceFragment(new MainFragment(MainActivity.this));
 
         final List<Dinosaurio> dino = new ArrayList<>();
+        MainFragment mF = new MainFragment(MainActivity.this);
         EnciclopediaFragment eF = new EnciclopediaFragment(MainActivity.this, dino);
+
+
+        DinosaurioDatabase.getInstance(this);
+
 
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                //JsonReader reader = new JsonReader();
-                Log.d("DINO", "DINO");
-                //Log.d("DINO -> ", reader.toString());
 
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getResources().openRawResource(R.raw.jurassicpark)));
                 String receiveString = "";
@@ -65,21 +68,14 @@ public class MainActivity extends AppCompatActivity{
 
                 String read = stringBuilder.toString();
 
-                /*String read = "[{\n" +
-                        "    \"name\": \"aardonyx\",\n" +
-                        "    \"diet\": \"herbivorous\",\n" +
-                        "    \"lived_in\": \"South Africa\",\n" +
-                        "    \"type\": \"sauropod\",\n" +
-                        "    \"species\": \"celestae\",\n" +
-                        "    \"period_name\": \"Early Jurassic\",\n" +
-                        "    \"length_meters;\": \"8.0\"\n" +
-                        "  }]";
+                mF.lista(Arrays.asList(new Gson().fromJson(read, Dinosaurio[].class)));
+                eF.lista(Arrays.asList(new Gson().fromJson(read, Dinosaurio[].class)));
 
-                 */
                 AppExecutors.getInstance().mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
-                        eF.lista(Arrays.asList(new Gson().fromJson(read, Dinosaurio[].class)));
+                        //mF.lista(Arrays.asList(new Gson().fromJson(read, Dinosaurio[].class)));
+                        //eF.lista(Arrays.asList(new Gson().fromJson(read, Dinosaurio[].class)));
                     }
                 });
             }
@@ -87,7 +83,7 @@ public class MainActivity extends AppCompatActivity{
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()){
                 case R.id.principal:
-                    replaceFragment(new MainFragment());
+                    replaceFragment(mF);
                     break;
                 case R.id.enciclopedia:
                     replaceFragment(eF);

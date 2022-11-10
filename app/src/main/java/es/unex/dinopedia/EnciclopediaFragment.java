@@ -44,16 +44,14 @@ public class EnciclopediaFragment extends Fragment {
     private List<Dinosaurio> dinoList = new ArrayList<>();
 
     public void lista(List<Dinosaurio> dino){
-        dinoList=new ArrayList<>(dino);
-        //Log.d("DINO", dino.get(0).getName());
-        //
-        //mAdapter.add(new Dinosaurio());
+        //dinoList=new ArrayList<>(dino);
+        DinosaurioDatabase database = DinosaurioDatabase.getInstance(context);
+        dinoList=database.getDao().getAll();
     }
 
     public EnciclopediaFragment(Context cont, List<Dinosaurio> dino) {
         // Required empty public constructor
         context = cont;
-        //dinoList = dino;
         mAdapter = new DinosaurioAdapter(context, new DinosaurioAdapter.OnItemClickListener() {
             @Override public void onItemClick(Dinosaurio item) {
                 //Snackbar.make(view, "Item "+item.getName()+" Clicked", Snackbar.LENGTH_LONG).show();
@@ -110,14 +108,8 @@ public class EnciclopediaFragment extends Fragment {
         // specify an adapter (see also next example)
         View view = mRecyclerView.findViewById(android.R.id.content);
 
-        //mAdapter.add(new Dinosaurio());
-        //mAdapter.load(dinoList);
-
         // - Attach the adapter to the RecyclerView
         mRecyclerView.setAdapter(mAdapter);
-
-        //DinosaurioCRUD crud = DinosaurioCRUD.getInstance(context);
-        //DinosaurioDatabase.getInstance(context);
 
         return viewMain;
     }
@@ -125,27 +117,6 @@ public class EnciclopediaFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        // Load saved ToDoItems, if necessary
-        //lista(dinoList);
-        //if(dinoList.size()!=0)
-        //    mAdapter.add(dinoList.get(0));
         mAdapter.load(dinoList);
-        //if (mAdapter.getItemCount() == 0)
-            //loadItems();
-    }
-
-    private void loadItems() {
-        DinosaurioCRUD crud = DinosaurioCRUD.getInstance(context);
-        List<Dinosaurio> items = crud.getAll();
-
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                List<Dinosaurio> items = DinosaurioDatabase.getInstance(context).getDao().getAll();
-                requireActivity().runOnUiThread( () -> mAdapter.load(items));
-            }
-        });
-
     }
 }
