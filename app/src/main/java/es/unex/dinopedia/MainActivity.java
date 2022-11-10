@@ -41,43 +41,42 @@ public class MainActivity extends AppCompatActivity{
         setContentView(binding.getRoot());
         replaceFragment(new MainFragment(MainActivity.this));
 
+
         final List<Dinosaurio> dino = new ArrayList<>();
         MainFragment mF = new MainFragment(MainActivity.this);
         EnciclopediaFragment eF = new EnciclopediaFragment(MainActivity.this, dino);
 
-
-        DinosaurioDatabase.getInstance(this);
-
-
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
+                //DinosaurioDatabase.getInstance(MainActivity.this).getDao().deleteAll();
+                if (DinosaurioDatabase.getInstance(MainActivity.this).getDao().count() == 0) {
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getResources().openRawResource(R.raw.jurassicpark)));
+                    String receiveString = "";
+                    StringBuilder stringBuilder = new StringBuilder();
 
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getResources().openRawResource(R.raw.jurassicpark)));
-                String receiveString = "";
-                StringBuilder stringBuilder = new StringBuilder();
-
-                while (true) {
-                    try {
-                        if (!((receiveString = bufferedReader.readLine()) != null)) break;
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    while (true) {
+                        try {
+                            if (!((receiveString = bufferedReader.readLine()) != null)) break;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        stringBuilder.append("\n").append(receiveString);
                     }
-                    stringBuilder.append("\n").append(receiveString);
+
+                    String read = stringBuilder.toString();
+
+                    //mF.lista(Arrays.asList(new Gson().fromJson(read, Dinosaurio[].class)));
+                    //eF.lista(Arrays.asList(new Gson().fromJson(read, Dinosaurio[].class)));
+                    List<Dinosaurio> dino = Arrays.asList(new Gson().fromJson(read, Dinosaurio[].class));
+
+
+                    for (int i = 0; i < dino.size(); i++) {
+                        Dinosaurio d = dino.get(i);
+                        DinosaurioDatabase.getInstance(MainActivity.this).getDao().insert(d);
+                    }
+
                 }
-
-                String read = stringBuilder.toString();
-
-                mF.lista(Arrays.asList(new Gson().fromJson(read, Dinosaurio[].class)));
-                eF.lista(Arrays.asList(new Gson().fromJson(read, Dinosaurio[].class)));
-
-                AppExecutors.getInstance().mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        //mF.lista(Arrays.asList(new Gson().fromJson(read, Dinosaurio[].class)));
-                        //eF.lista(Arrays.asList(new Gson().fromJson(read, Dinosaurio[].class)));
-                    }
-                });
             }
         });
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {

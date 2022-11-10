@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import org.json.JSONArray;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,6 +51,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         //dinoList=new ArrayList<>(dino);
         DinosaurioDatabase database = DinosaurioDatabase.getInstance(context);
         dinoList=database.getDao().getAll();
+
     }
 
     public MainFragment(Context cont) {
