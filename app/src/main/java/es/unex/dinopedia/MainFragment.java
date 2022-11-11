@@ -1,17 +1,21 @@
 package es.unex.dinopedia;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 
@@ -22,7 +26,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import es.unex.dinopedia.databinding.ActivityMainBinding;
 import es.unex.dinopedia.roomdb.DinosaurioDatabase;
 
 /**
@@ -36,6 +39,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private View vista;
     private final Context context;
     private DinosaurioAdapter mAdapter;
     private DateFormat formatoFecha;
@@ -47,11 +51,11 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private List<Dinosaurio> dinoList = new ArrayList<>();
     private List<Dinosaurio> copiaDinosaurio= new ArrayList<>(dinoList);
 
-    public void lista(List<Dinosaurio> dino){
+    public void lista(){
         //dinoList=new ArrayList<>(dino);
         DinosaurioDatabase database = DinosaurioDatabase.getInstance(context);
         dinoList=database.getDao().getAll();
-
+        copiaDinosaurio=database.getDao().getAll();
     }
 
     public MainFragment(Context cont) {
@@ -97,8 +101,15 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
+        vista = rootView;
         Button bIniciarSesion = rootView.findViewById(R.id.bIniciarSesion);
+
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                lista();
+            }
+        });
 
         bIniciarSesion.setOnClickListener(this);
         return rootView;
@@ -113,16 +124,25 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     }
 
     public void elegirDinosaurio(){
+        String nombre;
         Random random_method = new Random();
-        int valor = copiaDinosaurio.size();
         int nuevoDinosaurio = random_method.nextInt(copiaDinosaurio.size());
         long momento = System.currentTimeMillis();
         Date fechaActual = new Date(momento);
-        String salida = formatoFecha.format(fechaActual);
-        if(fecha!=fechaActual){
-            //mostrar nuevo dino con el int generado aleatorio
-            //fecha=fechaActual;
-            Log.d("fecha", salida);
+        String fechaActualS = formatoFecha.format(fechaActual);
+        String fechaS = formatoFecha.format(fecha);
+        if(!fechaS.equals(fechaActualS)){
+            fecha=fechaActual;
+            nuevoDinosaurio = random_method.nextInt(copiaDinosaurio.size());
+            Log.d("fecha", fechaS);
+        }
+        Dinosaurio d = (Dinosaurio) mAdapter.getItem(nuevoDinosaurio);
+        Log.d("HOLA", d.getName());
+        nombre=d.getName();
+
+        if(dinoList.size()!=0) {
+            final TextView dinoDia = (TextView) vista.findViewById(R.id.nombreDino);
+            dinoDia.setText(nombre);
         }
     }
 

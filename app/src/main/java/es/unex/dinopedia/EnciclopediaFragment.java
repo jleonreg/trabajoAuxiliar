@@ -45,7 +45,7 @@ public class EnciclopediaFragment extends Fragment {
     private final Context context;
     private List<Dinosaurio> dinoList = new ArrayList<>();
 
-    public void lista(List<Dinosaurio> dino){
+    public void lista(){
         //dinoList=new ArrayList<>(dino);
         DinosaurioDatabase database = DinosaurioDatabase.getInstance(context);
         dinoList=database.getDao().getAll();
@@ -95,6 +95,13 @@ public class EnciclopediaFragment extends Fragment {
         // Inflate the layout for this fragment
         View viewMain = inflater.inflate(R.layout.fragment_enciclopedia, container, false);
 
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                lista();
+            }
+        });
+
         mRecyclerView = viewMain.findViewById(R.id.my_recycler_view);
 
         // use this setting to improve performance if you know that changes
@@ -105,10 +112,6 @@ public class EnciclopediaFragment extends Fragment {
         // - Set a Linear Layout Manager to the RecyclerView
         mLayoutManager = new LinearLayoutManager(context);
         mRecyclerView.setLayoutManager(mLayoutManager);
-
-        // - Create a new Adapter for the RecyclerView
-        // specify an adapter (see also next example)
-        View view = mRecyclerView.findViewById(android.R.id.content);
 
         // - Attach the adapter to the RecyclerView
         mRecyclerView.setAdapter(mAdapter);

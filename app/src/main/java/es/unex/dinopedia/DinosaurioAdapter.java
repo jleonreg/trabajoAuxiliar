@@ -42,7 +42,6 @@ public class DinosaurioAdapter extends RecyclerView.Adapter<DinosaurioAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.bind(mItems.get(position),listener);
-
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -74,7 +73,9 @@ public class DinosaurioAdapter extends RecyclerView.Adapter<DinosaurioAdapter.Vi
 
     }
 
-    public Object getItem(int pos) { return mItems.get(pos); }
+    public Object getItem(int pos) {
+        return mItems.get(pos);
+    }
 
      static class ViewHolder extends RecyclerView.ViewHolder {
 
