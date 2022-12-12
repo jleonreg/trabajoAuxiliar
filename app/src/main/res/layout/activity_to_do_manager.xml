@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="es.unex.dinopedia.DinosaurioManagerActivity">
+    tools:context="es.unex.dinopedia.Managers.DinosaurioManagerActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="opciones">
+        <item>Carnivoro</item>
+        <item>Herbivoro</item>
+        <item>Omnivoro</item>
+        <item>Cretacico</item>
+        <item>Jurasico</item>
+        <item>Triasico</item>
+    </string-array>
+</resources>

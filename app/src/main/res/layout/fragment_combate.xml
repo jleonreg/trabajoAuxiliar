@@ -1,14 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bCombatir"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CombateFragment">
+    tools:context=".Fragments.CombateFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="BELEN" />
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/bHistorial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Historial de combates"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Spinner
+        android:id="@+id/mSpinnerdino1"
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="440dp"
+        android:contentDescription="@string/app_name"
+        android:minHeight="48dp" />
+
+    <Spinner
+        android:id="@+id/mSpinnerdino2"
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="225dp"
+        android:layout_marginTop="440dp"
+        android:contentDescription="@string/app_name"
+        android:minHeight="48dp" />
+
+    <TextView
+        android:id="@+id/textDino1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="405dp"
+        android:text="Dino 1:" />
+
+    <TextView
+        android:id="@+id/textDino2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="225dp"
+        android:layout_marginTop="405dp"
+        android:text="Dino 2:" />
+
+    <Button
+        android:id="@+id/bCombate"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="130dp"
+        android:layout_marginTop="520dp"
+        android:text="COMBATIR" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="match_parent"
+        android:layout_height="429dp"
+        android:src="@drawable/combatedino" />
 
 </FrameLayout>
