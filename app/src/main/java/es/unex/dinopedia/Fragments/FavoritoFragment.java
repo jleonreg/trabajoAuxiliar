@@ -18,6 +18,7 @@ import es.unex.dinopedia.AppExecutors.AppExecutors;
 import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Adapters.DinosaurioAdapter;
 import es.unex.dinopedia.Interfaz.MainActivityInterface;
+import es.unex.dinopedia.Model.Logro;
 import es.unex.dinopedia.R;
 import es.unex.dinopedia.roomdb.DinopediaDatabase;
 
@@ -67,7 +68,6 @@ public class FavoritoFragment extends Fragment {
     public void onResume() {
         super.onResume();
         cargarDinosaurios();
-        mAdapter.load(dinoList);
     }
 
 
@@ -75,6 +75,12 @@ public class FavoritoFragment extends Fragment {
         AppExecutors.getInstance().diskIO().execute(() -> {
             DinopediaDatabase database = DinopediaDatabase.getInstance(context);
             dinoList = database.getDinosaurioDao().getFavorito();
+            if (dinoList.size() > 0) {
+                Logro l = database.getLogroDao().getLogro("Marca tu primer dinosaurio favorito");
+                l.setChecked("1");
+                database.getLogroDao().update(l);
+            }
+            AppExecutors.getInstance().mainThread().execute(()->mAdapter.load(dinoList));
         });
     }
 }
