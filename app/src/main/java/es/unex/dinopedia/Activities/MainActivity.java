@@ -56,12 +56,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
     private void cargaDatos(){
         AppExecutors.getInstance().networkIO().execute(new ApiRunnable((new ApiListener() {
             @Override
-            public void onDinosauriosLoaded(List<Dinosaurio> dinoList) {
+            public void onLoaded(List<Dinosaurio> dinoList, List<Logro> logroList) {
                 añadirDinoRoom(dinoList);
-            }
-
-            @Override
-            public void onLogrosLoaded(List<Logro> logroList) {
                 añadirLogroRoom(logroList);
             }
         })));

@@ -37,8 +37,7 @@ public class ApiRunnable implements Runnable{
         try {
             List<Dinosaurio> dinos = service.getListDinosaurios().execute().body();
             List<Logro> logros = service.listLogros().execute().body();
-            AppExecutors.getInstance().mainThread().execute(() -> mApiListener.onDinosauriosLoaded(dinos));
-            AppExecutors.getInstance().mainThread().execute(() -> mApiListener.onLogrosLoaded(logros));
+            AppExecutors.getInstance().mainThread().execute(() -> mApiListener.onLoaded(dinos, logros));
         } catch (IOException e) {
             e.printStackTrace();
         }

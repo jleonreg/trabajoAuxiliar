@@ -97,12 +97,6 @@ public class EnciclopediaFragment extends Fragment {
         super.onResume();
         if(dinoList.size()!=0) {
             cargarDinoList();
-
-            if (mAdapter.getItemCount() == 0)
-                if (aplicar)
-                    mAdapter.load(dinoOpciones);
-                else
-                    mAdapter.load(dinoList);
         }
     }
 
@@ -110,6 +104,12 @@ public class EnciclopediaFragment extends Fragment {
         AppExecutors.getInstance().diskIO().execute(() -> {
             DinopediaDatabase database = DinopediaDatabase.getInstance(context);
             dinoList = database.getDinosaurioDao().getAll();
+
+            if (mAdapter.getItemCount() == 0)
+                if (aplicar)
+                    mAdapter.load(dinoOpciones);
+                else
+                    mAdapter.load(dinoList);
         });
     }
 }
