@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -17,13 +19,18 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.unex.dinopedia.AppContainer;
 import es.unex.dinopedia.AppExecutors.AppExecutors;
 import es.unex.dinopedia.Activities.CombateResultActivity;
+import es.unex.dinopedia.MainActivityViewModel;
 import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Adapters.DinosaurioAdapter;
 import es.unex.dinopedia.Model.HistorialCombate;
 import es.unex.dinopedia.Activities.HistorialCombateActivity;
 import es.unex.dinopedia.Model.Logro;
+import es.unex.dinopedia.MyApplication;
+import es.unex.dinopedia.Networking.DataSource;
+import es.unex.dinopedia.Networking.Repository;
 import es.unex.dinopedia.R;
 import es.unex.dinopedia.roomdb.DinopediaDatabase;
 
@@ -31,21 +38,23 @@ public class CombateFragment extends Fragment {
 
     private Spinner mSpinnerdino1;
     private Spinner mSpinnerdino2;
-    private List<String> dinoListNombres = new ArrayList<>();
+    private List<String> dinoListNombres;
     private static Context context;
     private ArrayAdapter adp;
     private Dinosaurio dinosaurio1;
     private Dinosaurio dinosaurio2;
     private Button bCombate;
     private Button bHistorial;
+    private Repository mRepository;
 
     public CombateFragment(Context cont) {
         context = cont;
+        mRepository = Repository.getInstance(DinopediaDatabase.getInstance(context).getDinosaurioDao(), DinopediaDatabase.getInstance(context).getLogroDao(), DataSource.getInstance());
+
     }
 
     public static CombateFragment newInstance(Context cont) {
         CombateFragment fragment = new CombateFragment(cont);
-        Bundle args = new Bundle();
         context = cont;
         return fragment;
     }
@@ -53,6 +62,17 @@ public class CombateFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        AppContainer appContainer = ((MyApplication) CombateFragment.this.getActivity().getApplication()).appContainer;
+        MainActivityViewModel mViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory)appContainer.factory).get(MainActivityViewModel.class);
+        mViewModel.getDinosNombres().observe(this, dinosaurios -> {
+            dinoListNombres=dinosaurios;
+            adp = new ArrayAdapter<>(context, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, dinoListNombres);
+            if (adp!= null) {
+                mSpinnerdino1.setAdapter(adp);
+                mSpinnerdino2.setAdapter(adp);
+            }
+        });
     }
 
     @Override
@@ -64,12 +84,6 @@ public class CombateFragment extends Fragment {
         mSpinnerdino2 = viewMain.findViewById(R.id.mSpinnerdino2);
         bCombate = viewMain.findViewById(R.id.bCombate);
         bHistorial = viewMain.findViewById(R.id.bHistorial);
-
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            DinopediaDatabase database = DinopediaDatabase.getInstance(context);
-            dinoListNombres=database.getDinosaurioDao().getNombres();
-        });
-
         botonCombate();
         botonHistorial();
 
@@ -86,21 +100,10 @@ public class CombateFragment extends Fragment {
         bCombate.setOnClickListener(v -> {
             String dino1 = mSpinnerdino1.getSelectedItem().toString();
             String dino2 = mSpinnerdino2.getSelectedItem().toString();
-            AppExecutors.getInstance().diskIO().execute(() -> {
-                DinopediaDatabase database = DinopediaDatabase.getInstance(context);
-                dinosaurio1=database.getDinosaurioDao().getDinosaurioString(dino1);
-                dinosaurio2=database.getDinosaurioDao().getDinosaurioString(dino2);
-            });
+            dinosaurio1 = mRepository.getDino(dino1);
+            dinosaurio2 = mRepository.getDino(dino2);
             combatir();
         });
-    }
-
-    public void cargarSpinner(){
-        adp = new ArrayAdapter<>(context, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, dinoListNombres);
-        if (adp!= null) {
-            mSpinnerdino1.setAdapter(adp);
-            mSpinnerdino2.setAdapter(adp);
-        }
     }
 
     public void combatir(){
@@ -154,6 +157,7 @@ public class CombateFragment extends Fragment {
                 database.getLogroDao().update(l);
             }
         });
+        mRepository.comprobarLogros("Realiza tu primer combate con la aplicación");
     }
 
     public void cambiarLogro(Dinosaurio dino){
@@ -216,6 +220,5 @@ public class CombateFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        cargarSpinner();
     }
 }

@@ -4,17 +4,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+
 import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import es.unex.dinopedia.Adapters.DinosaurioAdapter;
+import es.unex.dinopedia.Adapters.LogroAdapter;
+import es.unex.dinopedia.AppContainer;
 import es.unex.dinopedia.AppExecutors.AppExecutors;
+import es.unex.dinopedia.MainActivityViewModel;
 import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Model.Logro;
 import es.unex.dinopedia.Fragments.AlbumFragment;
@@ -23,6 +33,7 @@ import es.unex.dinopedia.Fragments.EnciclopediaFragment;
 import es.unex.dinopedia.Fragments.FavoritoFragment;
 import es.unex.dinopedia.Fragments.MainFragment;
 import es.unex.dinopedia.Interfaz.MainActivityInterface;
+import es.unex.dinopedia.MyApplication;
 import es.unex.dinopedia.Networking.ApiListener;
 import es.unex.dinopedia.Networking.ApiRunnable;
 import es.unex.dinopedia.R;
@@ -33,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
 
     ActivityMainBinding binding;
     FragmentManager fragmentManager = getSupportFragmentManager();
-    DinosaurioAdapter mAdapter = new DinosaurioAdapter(MainActivity.this, item -> {});
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,41 +56,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
             DinopediaDatabase.getInstance(MainActivity.this).getHistorialCombateDao().deleteAll();
         });
         quitarFavoritos();
-        cargaDatos();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         cambiarFragment();
-    }
-
-    private void cargaDatos(){
-        AppExecutors.getInstance().networkIO().execute(new ApiRunnable((new ApiListener() {
-            @Override
-            public void onLoaded(List<Dinosaurio> dinoList, List<Logro> logroList) {
-                añadirDinoRoom(dinoList);
-                añadirLogroRoom(logroList);
-            }
-        })));
-    }
-
-
-    private void añadirDinoRoom(List<Dinosaurio> dinoList){
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            for (int i = 0; i < dinoList.size(); i++) {
-                Dinosaurio d = dinoList.get(i);
-                DinopediaDatabase.getInstance(MainActivity.this).getDinosaurioDao().insert(d);
-            }
-            AppExecutors.getInstance().mainThread().execute(()->mAdapter.load(dinoList));
-        });
-    }
-
-    private void añadirLogroRoom(List<Logro> logroList){
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            for (int i = 0; i < logroList.size(); i++) {
-                Logro l = logroList.get(i);
-                DinopediaDatabase.getInstance(MainActivity.this).getLogroDao().insert(l);
-            }
-        });
     }
 
     private void replaceFragment(Fragment fragment){

@@ -8,6 +8,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
+
+import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Model.Logro;
 import es.unex.dinopedia.R;
 
@@ -80,4 +82,8 @@ public class LogroAdapter extends RecyclerView.Adapter<LogroAdapter.ViewHolder> 
         }
     }
 
+    public void swap(List<Logro> dataset){
+        mItems=dataset;
+        notifyDataSetChanged();
+    }
 }

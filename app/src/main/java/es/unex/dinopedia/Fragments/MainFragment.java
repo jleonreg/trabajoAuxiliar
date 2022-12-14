@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +17,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import es.unex.dinopedia.AppContainer;
 import es.unex.dinopedia.AppExecutors.AppExecutors;
 import es.unex.dinopedia.Activities.CuentaActivity;
+import es.unex.dinopedia.MainActivityViewModel;
 import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Adapters.DinosaurioAdapter;
 import es.unex.dinopedia.Activities.IniciarSesionActivity;
+import es.unex.dinopedia.MyApplication;
 import es.unex.dinopedia.R;
 import es.unex.dinopedia.databinding.ActivityMainBinding;
 import es.unex.dinopedia.roomdb.DinopediaDatabase;
@@ -66,23 +70,20 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    private void initDinosaurio(){
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            DinopediaDatabase database = DinopediaDatabase.getInstance(context);
-            dinoList = database.getDinosaurioDao().getAll();
-            AppExecutors.getInstance().mainThread().execute(()->copiaDinosaurio=dinoList);
-        });
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppContainer appContainer = ((MyApplication)  MainFragment.this.getActivity().getApplication()).appContainer;
+        MainActivityViewModel mViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory)appContainer.factory).get(MainActivityViewModel.class);
+        mViewModel.getDinos().observe(this, dinosaurios -> {
+            dinoList=dinosaurios;
+            copiaDinosaurio=dinosaurios;
+        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        initDinosaurio();
         vista = rootView;
         bIniciarSesion = rootView.findViewById(R.id.bIniciarSesion);
         bCuenta = rootView.findViewById(R.id.bCuenta);

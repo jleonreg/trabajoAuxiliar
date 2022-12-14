@@ -16,8 +16,8 @@ public class DataSource {
     private static DataSource sInstance;
 
     // LiveData storing the latest downloaded weather forecasts
-    private final MutableLiveData<Dinosaurio[]> mDownloadedDinos;
-    private final MutableLiveData<Logro[]> mDownloadedLogros;
+    private final MutableLiveData<List<Dinosaurio>> mDownloadedDinos;
+    private final MutableLiveData<List<Logro>> mDownloadedLogros;
 
     private DataSource() {
         mDownloadedDinos = new MutableLiveData<>();
@@ -31,11 +31,11 @@ public class DataSource {
         return sInstance;
     }
 
-    public LiveData<Dinosaurio[]> getCurrentDinos() {
+    public LiveData<List<Dinosaurio>> getCurrentDinos() {
         return mDownloadedDinos;
     }
 
-    public LiveData<Logro[]> getCurrentLogros() {
+    public LiveData<List<Logro>> getCurrentLogros() {
         return mDownloadedLogros;
     }
 
@@ -43,11 +43,9 @@ public class DataSource {
      * Gets the newest repos
      */
     public void fetchRepos() {
-        AppExecutors.getInstance().networkIO().execute(new ApiRunnable(new ApiListener() {
-            @Override
-            public void onLoaded(List<Dinosaurio> dinos, List<Logro> logros) {
-
-            }
+        AppExecutors.getInstance().networkIO().execute(new ApiRunnable((dinos, logros) -> {
+            mDownloadedDinos.postValue(dinos);
+            mDownloadedLogros.postValue(logros);
         }));
     }
 

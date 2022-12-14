@@ -1,5 +1,8 @@
 package es.unex.dinopedia.roomdb;
 
+import static androidx.room.OnConflictStrategy.IGNORE;
+
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -11,13 +14,13 @@ import es.unex.dinopedia.Model.Dinosaurio;
 public interface DinosaurioDao {
 
     @Query("SELECT * FROM Dinosaurio")
-    List<Dinosaurio> getAll();
+    LiveData<List<Dinosaurio>> getAll();
 
     @Query("SELECT name FROM Dinosaurio")
-    List<String> getNombres();
+    LiveData<List<String>> getNombres();
 
     @Query("SELECT * FROM Dinosaurio WHERE diet=:opcion OR periodName=:opcion")
-    List<Dinosaurio> getOpciones(String opcion);
+    LiveData<List<Dinosaurio>> getOpciones(String opcion);
 
     @Query("SELECT * FROM Dinosaurio WHERE id=:ID")
     Dinosaurio getDinosaurioId(long ID);
@@ -25,8 +28,11 @@ public interface DinosaurioDao {
     @Query("SELECT * FROM Dinosaurio WHERE name=:nombre")
     Dinosaurio getDinosaurioString(String nombre);
 
-    @Insert
+    @Insert (onConflict = IGNORE)
     long insert(Dinosaurio item);
+
+    @Insert (onConflict = IGNORE)
+    void insertAll(List<Dinosaurio> dino);
 
     @Query("DELETE FROM Dinosaurio")
     void deleteAll();
@@ -38,7 +44,7 @@ public interface DinosaurioDao {
     int count();
 
     @Query("SELECT * FROM Dinosaurio WHERE favorite='1'")
-    List<Dinosaurio> getFavorito();
+    LiveData<List<Dinosaurio>> getFavorito();
 
     @Query("UPDATE Dinosaurio SET favorite='0'")
     void quitarFavorite();

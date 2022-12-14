@@ -3,6 +3,9 @@ package es.unex.dinopedia.Fragments;
 import android.content.Context;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,10 +16,17 @@ import android.widget.Button;
 import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.List;
+
+import es.unex.dinopedia.Activities.MainActivity;
+import es.unex.dinopedia.AppContainer;
 import es.unex.dinopedia.AppExecutors.AppExecutors;
+import es.unex.dinopedia.MainActivityViewModel;
 import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Adapters.DinosaurioAdapter;
 import es.unex.dinopedia.Interfaz.MainActivityInterface;
+import es.unex.dinopedia.MyApplication;
+import es.unex.dinopedia.Networking.DataSource;
+import es.unex.dinopedia.Networking.Repository;
 import es.unex.dinopedia.R;
 import es.unex.dinopedia.roomdb.DinopediaDatabase;
 
@@ -27,9 +37,8 @@ public class EnciclopediaFragment extends Fragment {
     private DinosaurioAdapter mAdapter;
     private Context context;
     private List<Dinosaurio> dinoList;
-    private List<Dinosaurio> dinoOpciones;
     private Spinner opciones;
-    private boolean aplicar=false;
+    private Repository mRepository;
 
     public EnciclopediaFragment(){
     }
@@ -38,22 +47,25 @@ public class EnciclopediaFragment extends Fragment {
         context = cont;
         dinoList=new ArrayList<>();
         mAdapter = new DinosaurioAdapter(context, item -> {});
+        mRepository = Repository.getInstance(DinopediaDatabase.getInstance(context).getDinosaurioDao(), DinopediaDatabase.getInstance(context).getLogroDao(), DataSource.getInstance());
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppContainer appContainer = ((MyApplication) EnciclopediaFragment.this.getActivity().getApplication()).appContainer;
+        MainActivityViewModel mViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory)appContainer.factory).get(MainActivityViewModel.class);
+        mViewModel.getDinos().observe(this, dinosaurios -> {
+            mAdapter.swap(dinosaurios);
+            dinoList=dinosaurios;
+        });
+        mRepository.getDinosOpciones().observe(this, dinosauriosOpciones -> mAdapter.swap(dinosauriosOpciones));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View viewMain = inflater.inflate(R.layout.fragment_enciclopedia, container, false);
-
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            DinopediaDatabase database = DinopediaDatabase.getInstance(context);
-            dinoList = database.getDinosaurioDao().getAll();
-        });
 
         mRecyclerView = viewMain.findViewById(R.id.my_recycler_view);
 
@@ -73,7 +85,7 @@ public class EnciclopediaFragment extends Fragment {
         cargarOpciones(viewMain);
 
         Button bRestaurar = viewMain.findViewById(R.id.bRestaurar);
-        bRestaurar.setOnClickListener(v -> aplicar=false);
+        bRestaurar.setOnClickListener(v -> mAdapter.swap(dinoList));
 
         return viewMain;
     }
@@ -84,32 +96,12 @@ public class EnciclopediaFragment extends Fragment {
 
         Button bAplicar = viewMain.findViewById(R.id.bAplicar);
         bAplicar.setOnClickListener(v -> {
-            AppExecutors.getInstance().diskIO().execute(() -> {
-                DinopediaDatabase database = DinopediaDatabase.getInstance(context);
-                dinoOpciones=database.getDinosaurioDao().getOpciones(opciones.getSelectedItem().toString());
-            });
-            aplicar=true;
+           mRepository.setFiltro(opciones.getSelectedItem().toString());
         });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(dinoList.size()!=0) {
-            cargarDinoList();
-        }
-    }
-
-    private void cargarDinoList(){
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            DinopediaDatabase database = DinopediaDatabase.getInstance(context);
-            dinoList = database.getDinosaurioDao().getAll();
-
-            if (mAdapter.getItemCount() == 0)
-                if (aplicar)
-                    mAdapter.load(dinoOpciones);
-                else
-                    mAdapter.load(dinoList);
-        });
     }
 }

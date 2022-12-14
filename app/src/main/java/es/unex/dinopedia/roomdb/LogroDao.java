@@ -1,5 +1,8 @@
 package es.unex.dinopedia.roomdb;
 
+import static androidx.room.OnConflictStrategy.IGNORE;
+
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -11,13 +14,16 @@ import es.unex.dinopedia.Model.Logro;
 public interface LogroDao {
 
     @Query("SELECT * FROM Logro")
-    List<Logro> getAll();
+    LiveData<List<Logro>> getAll();
 
     @Query("SELECT * FROM Logro WHERE name=:titulo")
     Logro getLogro(String titulo);
 
-    @Insert
+    @Insert (onConflict = IGNORE)
     long insert(Logro item);
+
+    @Insert (onConflict = IGNORE)
+    void insertAll(List<Logro> logros);
 
     @Query("DELETE FROM Logro")
     void deleteAll();
@@ -29,5 +35,5 @@ public interface LogroDao {
     int count();
 
     @Query("SELECT * FROM Logro WHERE checked='1'")
-    List<Logro> getCheck();
+    LiveData<List<Logro>> getCheck();
 }

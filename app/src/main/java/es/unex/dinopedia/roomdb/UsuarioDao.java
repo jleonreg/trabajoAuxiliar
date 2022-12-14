@@ -1,5 +1,8 @@
 package es.unex.dinopedia.roomdb;
 
+import static androidx.room.OnConflictStrategy.IGNORE;
+
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -11,13 +14,16 @@ import es.unex.dinopedia.Model.Usuario;
 public interface UsuarioDao {
 
     @Query("SELECT * FROM Usuario")
-    List<Usuario> getAll();
+    LiveData<List<Usuario>> getAll();
 
     @Query("SELECT * FROM Usuario")
     Usuario getUsuario();
 
-    @Insert
+    @Insert (onConflict = IGNORE)
     long insert(Usuario item);
+
+    @Insert (onConflict = IGNORE)
+    long insertAll(List<Usuario> item);
 
     @Query("DELETE FROM Usuario")
     void deleteAll();

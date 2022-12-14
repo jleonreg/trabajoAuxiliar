@@ -1,5 +1,8 @@
 package es.unex.dinopedia.roomdb;
 
+import static androidx.room.OnConflictStrategy.IGNORE;
+
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -11,10 +14,13 @@ import es.unex.dinopedia.Model.HistorialCombate;
 public interface HistorialCombateDao {
 
     @Query("SELECT * FROM HistorialCombate")
-    List<HistorialCombate> getAll();
+    LiveData<List<HistorialCombate>> getAll();
 
-    @Insert
+    @Insert (onConflict = IGNORE)
     long insert(HistorialCombate item);
+
+    @Insert (onConflict = IGNORE)
+    long insertAll(List<HistorialCombate> hc);
 
     @Query("DELETE FROM HistorialCombate")
     void deleteAll();

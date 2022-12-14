@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,11 +15,17 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.unex.dinopedia.Activities.IniciarSesionActivity;
+import es.unex.dinopedia.AppContainer;
 import es.unex.dinopedia.AppExecutors.AppExecutors;
+import es.unex.dinopedia.MainActivityViewModel;
 import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Adapters.DinosaurioAdapter;
 import es.unex.dinopedia.Interfaz.MainActivityInterface;
 import es.unex.dinopedia.Model.Logro;
+import es.unex.dinopedia.MyApplication;
+import es.unex.dinopedia.Networking.DataSource;
+import es.unex.dinopedia.Networking.Repository;
 import es.unex.dinopedia.R;
 import es.unex.dinopedia.roomdb.DinopediaDatabase;
 
@@ -35,12 +42,17 @@ public class FavoritoFragment extends Fragment {
         context = cont;
         mAdapter = new DinosaurioAdapter(context, item -> {});
         dinoList = new ArrayList<>();
-        cargarDinosaurios();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppContainer appContainer = ((MyApplication) FavoritoFragment.this.getActivity().getApplication()).appContainer;
+        MainActivityViewModel mViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory)appContainer.factory).get(MainActivityViewModel.class);
+        mViewModel.getDinosFavoritos().observe(this, dinosaurios -> {
+            mAdapter.swap(dinosaurios);
+            dinoList=dinosaurios;
+        });
     }
 
     @Override
@@ -67,20 +79,14 @@ public class FavoritoFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        cargarDinosaurios();
+        comprobarLogro();
     }
 
 
-    public void cargarDinosaurios(){
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            DinopediaDatabase database = DinopediaDatabase.getInstance(context);
-            dinoList = database.getDinosaurioDao().getFavorito();
-            if (dinoList.size() > 0) {
-                Logro l = database.getLogroDao().getLogro("Marca tu primer dinosaurio favorito");
-                l.setChecked("1");
-                database.getLogroDao().update(l);
-            }
-            AppExecutors.getInstance().mainThread().execute(()->mAdapter.load(dinoList));
-        });
+    public void comprobarLogro(){
+        if (dinoList.size() > 0) {
+            Repository mRepository = Repository.getInstance(DinopediaDatabase.getInstance(context).getDinosaurioDao(), DinopediaDatabase.getInstance(context).getLogroDao(), DataSource.getInstance());
+            mRepository.comprobarLogros("Marca tu primer dinosaurio favorito");
+        }
     }
 }

@@ -1,7 +1,15 @@
 package es.unex.dinopedia.Networking;
 
-import androidx.lifecycle.LiveData;
+import static androidx.core.content.PackageManagerCompat.LOG_TAG;
 
+import android.util.Log;
+
+import androidx.arch.core.util.Function;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
+
+import java.util.Arrays;
 import java.util.List;
 
 import es.unex.dinopedia.AppExecutors.AppExecutors;
@@ -16,6 +24,7 @@ public class Repository {
     private final DinosaurioDao dinoDAO;
     private final LogroDao logroDAO;
     private final DataSource dataSource;
+    private MutableLiveData<String> dinoFilterLiveData = new MutableLiveData<>();
 
 
     public Repository(DinosaurioDao dinoDAO, LogroDao logroDAO, DataSource dataSource) {
@@ -24,19 +33,19 @@ public class Repository {
         this.dataSource = dataSource;
 
         dataSource.fetchRepos();
-        LiveData<Dinosaurio[]> dino_data = dataSource.getCurrentDinos();
-        LiveData<Logro[]> logro_data = dataSource.getCurrentLogros();
+        LiveData<List<Dinosaurio>> dino_data = dataSource.getCurrentDinos();
+        LiveData<List<Logro>> logro_data = dataSource.getCurrentLogros();
         dino_data.observeForever(dinoObserver -> AppExecutors.getInstance().diskIO().execute(() -> {
-            if (dinoObserver.length > 0) {
+            if (dinoObserver.size() > 0) {
                 dinoDAO.deleteAll();
             }
-            dinoDAO.insert(dinoObserver[0]);
+            dinoDAO.insertAll(dinoObserver);
         }));
         logro_data.observeForever(logroObserver -> AppExecutors.getInstance().diskIO().execute(() -> {
-            if (logroObserver.length > 0) {
+            if (logroObserver.size() > 0) {
                 logroDAO.deleteAll();
             }
-            logroDAO.insert(logroObserver[0]);
+            logroDAO.insertAll(logroObserver);
         }));
     }
 
@@ -47,11 +56,56 @@ public class Repository {
         return sInstance;
     }
 
-    public LiveData<Dinosaurio[]> getCurrentNewsDinos() {
-        return dataSource.getCurrentDinos();
+    public LiveData<List<Dinosaurio>> getCurrentNewsDinos() {
+        return dinoDAO.getAll();
     }
 
-    public LiveData<Logro[]> getCurrentNewsLogros() {
-        return dataSource.getCurrentLogros();
+    public LiveData<List<Logro>> getCurrentNewsLogros() {
+        return logroDAO.getAll();
+    }
+
+
+    public void doFetch(){
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            dinoDAO.deleteAll();
+            logroDAO.deleteAll();
+        });
+    }
+
+    public LiveData<List<Dinosaurio>> getDinosOpciones() {
+        return Transformations.switchMap(dinoFilterLiveData, new Function<String, LiveData<List<Dinosaurio>>>() {
+            @Override
+            public LiveData<List<Dinosaurio>> apply(String input) {
+                return dinoDAO.getOpciones(input);
+            }
+        });
+    }
+
+    public LiveData<List<Dinosaurio>> getDinosFavoritos(){
+        return dinoDAO.getFavorito();
+    }
+
+    public void setFiltro(String opcion){
+        dinoFilterLiveData.postValue(opcion);
+    }
+
+    public LiveData<List<Logro>> getLogrosActivos(){
+        return logroDAO.getCheck();
+    }
+
+    public void comprobarLogros(String logro){
+        Logro l = logroDAO.getLogro(logro);
+        if(!l.getChecked().equals("1")){
+            l.setChecked("1");
+            logroDAO.update(l);
+        }
+    }
+
+    public LiveData<List<String>> getDinosString(){
+        return dinoDAO.getNombres();
+    }
+
+    public Dinosaurio getDino(String nombre){
+        return dinoDAO.getDinosaurioString(nombre);
     }
 }

@@ -7,6 +7,8 @@ import android.widget.EditText;
 import es.unex.dinopedia.AppExecutors.AppExecutors;
 import es.unex.dinopedia.Model.Logro;
 import es.unex.dinopedia.Model.Usuario;
+import es.unex.dinopedia.Networking.DataSource;
+import es.unex.dinopedia.Networking.Repository;
 import es.unex.dinopedia.R;
 import es.unex.dinopedia.roomdb.DinopediaDatabase;
 
@@ -30,9 +32,8 @@ public class IniciarSesionActivity extends AppCompatActivity {
                 u.setInfoDino(false);
                 database.getUsuarioDao().insert(u);
 
-                Logro l = database.getLogroDao().getLogro("Inicia Sesión en la aplicación");
-                l.setChecked("1");
-                database.getLogroDao().update(l);
+                Repository mRepository = Repository.getInstance(DinopediaDatabase.getInstance(IniciarSesionActivity.this).getDinosaurioDao(), DinopediaDatabase.getInstance(IniciarSesionActivity.this).getLogroDao(), DataSource.getInstance());
+                mRepository.comprobarLogros("Inicia Sesión en la aplicación");
             });
             finish();
         });

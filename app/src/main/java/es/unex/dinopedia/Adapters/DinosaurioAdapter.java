@@ -80,4 +80,8 @@ public class DinosaurioAdapter extends RecyclerView.Adapter<DinosaurioAdapter.Vi
         }
     }
 
+    public void swap(List<Dinosaurio> dataset){
+        mItems=dataset;
+        notifyDataSetChanged();
+    }
 }
