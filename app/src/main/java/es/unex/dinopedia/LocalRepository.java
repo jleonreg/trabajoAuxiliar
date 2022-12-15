@@ -1,26 +1,14 @@
 package es.unex.dinopedia;
 
-import static androidx.core.content.PackageManagerCompat.LOG_TAG;
 
-import android.util.Log;
-
-import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
-
-import java.util.Arrays;
 import java.util.List;
-
 import es.unex.dinopedia.AppExecutors.AppExecutors;
 import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Model.HistorialCombate;
-import es.unex.dinopedia.Model.Logro;
 import es.unex.dinopedia.Model.Usuario;
-import es.unex.dinopedia.Networking.DataSource;
-import es.unex.dinopedia.roomdb.DinosaurioDao;
 import es.unex.dinopedia.roomdb.HistorialCombateDao;
-import es.unex.dinopedia.roomdb.LogroDao;
 import es.unex.dinopedia.roomdb.UsuarioDao;
 
 public class LocalRepository {
@@ -44,11 +32,11 @@ public class LocalRepository {
             }
             hcDAO.insertAll(historialCombateObserver);
         }));
-        user_data.observeForever(logroObserver -> AppExecutors.getInstance().diskIO().execute(() -> {
-            if (logroObserver.size() > 0) {
+        user_data.observeForever(userObserver -> AppExecutors.getInstance().diskIO().execute(() -> {
+            if (userObserver.size() > 0) {
                 userDAO.deleteAll();
             }
-            userDAO.insertAll(logroObserver);
+            userDAO.insertAll(userObserver);
         }));
     }
 
@@ -65,5 +53,34 @@ public class LocalRepository {
 
     public LiveData<List<Usuario>> getCurrentNewsUser() {
         return userDAO.getAll();
+    }
+
+    public void insertarHistorial(Dinosaurio d1, Dinosaurio d2, String resultado){
+        HistorialCombate hc = new HistorialCombate(d1.getName(), d2.getName(), resultado);
+        hcDAO.insert(hc);
+    }
+
+    public List<HistorialCombate> obtenerLista(){
+        return hcDAO.getAllList();
+    }
+
+    public Usuario getUsuario(){
+        return userDAO.getUsuario();
+    }
+
+    public void borrarTodo(){
+        userDAO.deleteAll();
+    }
+
+    public void actualizarModoUsuario(long id, Boolean bool){
+        userDAO.updateModoUsuario(id, bool);
+    }
+
+    public void actualizar(Usuario u){
+        userDAO.update(u);
+    }
+
+    public void limpiar(){
+        hcDAO.deleteAll();
     }
 }

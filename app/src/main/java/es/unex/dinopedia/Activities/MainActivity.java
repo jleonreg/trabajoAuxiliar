@@ -24,6 +24,8 @@ import es.unex.dinopedia.Adapters.DinosaurioAdapter;
 import es.unex.dinopedia.Adapters.LogroAdapter;
 import es.unex.dinopedia.AppContainer;
 import es.unex.dinopedia.AppExecutors.AppExecutors;
+import es.unex.dinopedia.LocalDataSource;
+import es.unex.dinopedia.LocalRepository;
 import es.unex.dinopedia.MainActivityViewModel;
 import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Model.Logro;
@@ -36,6 +38,8 @@ import es.unex.dinopedia.Interfaz.MainActivityInterface;
 import es.unex.dinopedia.MyApplication;
 import es.unex.dinopedia.Networking.ApiListener;
 import es.unex.dinopedia.Networking.ApiRunnable;
+import es.unex.dinopedia.Networking.DataSource;
+import es.unex.dinopedia.Networking.Repository;
 import es.unex.dinopedia.R;
 import es.unex.dinopedia.databinding.ActivityMainBinding;
 import es.unex.dinopedia.roomdb.DinopediaDatabase;
@@ -44,18 +48,23 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
 
     ActivityMainBinding binding;
     FragmentManager fragmentManager = getSupportFragmentManager();
+    Repository mRepository;
+    LocalRepository mLocalRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mRepository = Repository.getInstance(DinopediaDatabase.getInstance(MainActivity.this).getDinosaurioDao(), DinopediaDatabase.getInstance(MainActivity.this).getLogroDao(), DataSource.getInstance());
+        mLocalRepository = LocalRepository.getInstance(DinopediaDatabase.getInstance(MainActivity.this).getHistorialCombateDao(), DinopediaDatabase.getInstance(MainActivity.this).getUsuarioDao(), LocalDataSource.getInstance());
+
         AppExecutors.getInstance().diskIO().execute(() -> {
-            DinopediaDatabase.getInstance(MainActivity.this).getDinosaurioDao().deleteAll();
-            DinopediaDatabase.getInstance(MainActivity.this).getLogroDao().deleteAll();
-            DinopediaDatabase.getInstance(MainActivity.this).getHistorialCombateDao().deleteAll();
+            mRepository.limpiar();
+            mLocalRepository.limpiar();
+            mRepository.quitarFavoritos();
         });
-        quitarFavoritos();
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -105,12 +114,5 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         Intent intent = new Intent(MainActivity.this, DinosaurioInfoActivity.class);
         intent.putExtra("id", d.getId());
         startActivity(intent);
-    }
-
-    public void quitarFavoritos(){
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            DinopediaDatabase database = DinopediaDatabase.getInstance(MainActivity.this);
-            database.getDinosaurioDao().quitarFavorite();
-        });
     }
 }

@@ -16,11 +16,14 @@ public interface HistorialCombateDao {
     @Query("SELECT * FROM HistorialCombate")
     LiveData<List<HistorialCombate>> getAll();
 
+    @Query("SELECT * FROM HistorialCombate")
+    List<HistorialCombate> getAllList();
+
     @Insert (onConflict = IGNORE)
     long insert(HistorialCombate item);
 
     @Insert (onConflict = IGNORE)
-    long insertAll(List<HistorialCombate> hc);
+    void insertAll(List<HistorialCombate> hc);
 
     @Query("DELETE FROM HistorialCombate")
     void deleteAll();

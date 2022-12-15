@@ -2,16 +2,9 @@ package es.unex.dinopedia;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-
 import java.util.List;
-
-import es.unex.dinopedia.AppExecutors.AppExecutors;
-import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Model.HistorialCombate;
-import es.unex.dinopedia.Model.Logro;
 import es.unex.dinopedia.Model.Usuario;
-import es.unex.dinopedia.Networking.ApiRunnable;
-import es.unex.dinopedia.Networking.DataSource;
 
 public class LocalDataSource {
 

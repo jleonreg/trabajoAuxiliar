@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 import es.unex.dinopedia.AppExecutors.AppExecutors;
+import es.unex.dinopedia.LocalDataSource;
+import es.unex.dinopedia.LocalRepository;
 import es.unex.dinopedia.Model.Usuario;
 import es.unex.dinopedia.R;
 import es.unex.dinopedia.roomdb.DinopediaDatabase;
@@ -22,6 +24,7 @@ public class CuentaActivity extends AppCompatActivity {
     private EditText eNUsuario;
     private Switch swModo;
     private Switch swInfoDino;
+    private LocalRepository mLocalRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,7 @@ public class CuentaActivity extends AppCompatActivity {
         eNUsuario = findViewById(R.id.eTUsuario);
         swModo = findViewById(R.id.swModo);
         swInfoDino = findViewById(R.id.sInfoDino);
+        mLocalRepository = LocalRepository.getInstance(DinopediaDatabase.getInstance(CuentaActivity.this).getHistorialCombateDao(), DinopediaDatabase.getInstance(CuentaActivity.this).getUsuarioDao(), LocalDataSource.getInstance());
 
         activarSwitch();
 
@@ -58,45 +62,38 @@ public class CuentaActivity extends AppCompatActivity {
     }
 
     private void cambiarSwitch(){
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            Switch swModo = findViewById(R.id.swModo);
-            Usuario u = DinopediaDatabase.getInstance(CuentaActivity.this).getUsuarioDao().getUsuario();
-            if(u.isModo()){
-                AppExecutors.getInstance().mainThread().execute(()->swModo.setChecked(true));
-            }
-            else{
-                AppExecutors.getInstance().mainThread().execute(()->swModo.setChecked(false));
-            }
-        });
+        Switch swModo = findViewById(R.id.swModo);
+        Usuario u = mLocalRepository.getUsuario();
+        if(u.isModo()){
+            swModo.setChecked(true);
+        }
+        else{
+            swModo.setChecked(false);
+        }
     }
 
     private void activarSwitch(){
-        AppExecutors.getInstance().diskIO().execute(() -> {
-        Usuario u = DinopediaDatabase.getInstance(CuentaActivity.this).getUsuarioDao().getUsuario();
+        Usuario u = mLocalRepository.getUsuario();
         if(u!=null) {
             if (u.isInfoDino()) {
-                AppExecutors.getInstance().mainThread().execute(() -> swInfoDino.setChecked(true));
+                swInfoDino.setChecked(true);
             } else {
-                AppExecutors.getInstance().mainThread().execute(() -> swInfoDino.setChecked(false));
+                swInfoDino.setChecked(false);
             }
         }
-    });
     }
 
     private void botonCambiar(){
-        bCambiar.setOnClickListener(view -> AppExecutors.getInstance().diskIO().execute(() -> {
+        bCambiar.setOnClickListener(view -> {
             DinopediaDatabase database = DinopediaDatabase.getInstance(CuentaActivity.this);
-            Usuario u = new Usuario(database.getUsuarioDao().getUsuario().getId(), eNUsuario.getText().toString(), database.getUsuarioDao().getUsuario().isModo(), database.getUsuarioDao().getUsuario().isInfoDino());
+            Usuario u = new Usuario(mLocalRepository.getUsuario().getId(), eNUsuario.getText().toString(), mLocalRepository.getUsuario().isModo(), mLocalRepository.getUsuario().isInfoDino());
             database.getUsuarioDao().update(u);
-        }));
+        });
     }
 
     private void botonCerrarSesion(){
         bCerrarSesion.setOnClickListener(view -> {
-            AppExecutors.getInstance().diskIO().execute(() -> {
-                DinopediaDatabase database = DinopediaDatabase.getInstance(CuentaActivity.this);
-                database.getUsuarioDao().deleteAll();
-            });
+            mLocalRepository.borrarTodo();
             finish();
         });
     }
@@ -117,19 +114,15 @@ public class CuentaActivity extends AppCompatActivity {
 
     private void switchModo() {
         swModo.setOnClickListener(view -> {
-            AppExecutors.getInstance().diskIO().execute(() -> {
-                Usuario aux = DinopediaDatabase.getInstance(CuentaActivity.this).getUsuarioDao().getUsuario();
-                if(aux.isModo()==false){
-                    DinopediaDatabase.getInstance(CuentaActivity.this).getUsuarioDao().updateModoUsuario(aux.getId(), true);
-                }
-                else{
-                    DinopediaDatabase.getInstance(CuentaActivity.this).getUsuarioDao().updateModoUsuario(aux.getId(), false);
-                }
-            });
-            if (swModo.isChecked()){
-                CuentaActivity.this.setDayNight(0);
+            Usuario aux = mLocalRepository.getUsuario();
+            if (aux.isModo() == false) {
+                mLocalRepository.actualizarModoUsuario(aux.getId(), true);
+            } else {
+                mLocalRepository.actualizarModoUsuario(aux.getId(), false);
             }
-            else{
+            if (swModo.isChecked()) {
+                CuentaActivity.this.setDayNight(0);
+            } else {
                 CuentaActivity.this.setDayNight(1);
             }
         });
@@ -138,18 +131,14 @@ public class CuentaActivity extends AppCompatActivity {
     private void switchInfoDino() {
         swInfoDino.setOnClickListener(v -> {
             if(swInfoDino.isChecked()){
-                AppExecutors.getInstance().diskIO().execute(() -> {
-                    Usuario u = DinopediaDatabase.getInstance(CuentaActivity.this).getUsuarioDao().getUsuario();
-                    u.setInfoDino(true);
-                    DinopediaDatabase.getInstance(CuentaActivity.this).getUsuarioDao().update(u);
-                });
+                Usuario u = mLocalRepository.getUsuario();
+                u.setInfoDino(true);
+                DinopediaDatabase.getInstance(CuentaActivity.this).getUsuarioDao().update(u);
             }
             else{
-                AppExecutors.getInstance().diskIO().execute(() -> {
-                    Usuario u = DinopediaDatabase.getInstance(CuentaActivity.this).getUsuarioDao().getUsuario();
-                    u.setInfoDino(false);
-                    DinopediaDatabase.getInstance(CuentaActivity.this).getUsuarioDao().update(u);
-                });
+                Usuario u = mLocalRepository.getUsuario();
+                u.setInfoDino(false);
+                mLocalRepository.actualizar(u);
             }
         });
     }

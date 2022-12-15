@@ -20,6 +20,8 @@ import java.util.Random;
 import es.unex.dinopedia.AppContainer;
 import es.unex.dinopedia.AppExecutors.AppExecutors;
 import es.unex.dinopedia.Activities.CuentaActivity;
+import es.unex.dinopedia.LocalDataSource;
+import es.unex.dinopedia.LocalRepository;
 import es.unex.dinopedia.MainActivityViewModel;
 import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Adapters.DinosaurioAdapter;
@@ -44,6 +46,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private List<Dinosaurio> copiaDinosaurio;
     private Button bCuenta;
     private Button bIniciarSesion;
+    private LocalRepository mLocalRepository;
 
     public MainFragment(){
     }
@@ -58,15 +61,18 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         binding = bind;
         initUsuario();
         dinosaurioDelDia = 0;
+        mLocalRepository = LocalRepository.getInstance(DinopediaDatabase.getInstance(context).getHistorialCombateDao(), DinopediaDatabase.getInstance(context).getUsuarioDao(), LocalDataSource.getInstance());
     }
 
     private void initUsuario(){
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            DinopediaDatabase database = DinopediaDatabase.getInstance(context);
-            if(database.getUsuarioDao().getUsuario()!=null)
-                sesionIniciada=true;
-            else
-                sesionIniciada=false;
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                if(mLocalRepository.getUsuario()!=null)
+                    sesionIniciada=true;
+                else
+                    sesionIniciada=false;
+            }
         });
     }
 
@@ -100,12 +106,11 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     }
 
     private void botonCuenta(){
-        bCuenta.setOnClickListener(v -> AppExecutors.getInstance().diskIO().execute(() -> {
-            DinopediaDatabase database = DinopediaDatabase.getInstance(context);
+        bCuenta.setOnClickListener(v -> {
             Intent intent = new Intent(context, CuentaActivity.class);
-            intent.putExtra("USUARIO", database.getUsuarioDao().getUsuario().getName());
+            intent.putExtra("USUARIO", mLocalRepository.getUsuario().getName());
             AppExecutors.getInstance().mainThread().execute(()->startActivityForResult(intent, 2));
-        }));
+        });
     }
 
     @Override
@@ -165,22 +170,16 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1){
-            AppExecutors.getInstance().diskIO().execute(() -> {
-                DinopediaDatabase database = DinopediaDatabase.getInstance(context);
-                if(database.getUsuarioDao().getUsuario()!=null)
-                    sesionIniciada=true;
-                else
-                    sesionIniciada=false;
-            });
+            if(mLocalRepository.getUsuario()!=null)
+                sesionIniciada=true;
+            else
+                sesionIniciada=false;
         }
         if(requestCode == 2){
-            AppExecutors.getInstance().diskIO().execute(() -> {
-                DinopediaDatabase database = DinopediaDatabase.getInstance(context);
-                if(database.getUsuarioDao().getUsuario()!=null)
-                    sesionIniciada=true;
-                else
-                    sesionIniciada=false;
-            });
+            if(mLocalRepository.getUsuario()!=null)
+                sesionIniciada=true;
+            else
+                sesionIniciada=false;
         }
     }
 }

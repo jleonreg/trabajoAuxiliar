@@ -23,7 +23,7 @@ public interface UsuarioDao {
     long insert(Usuario item);
 
     @Insert (onConflict = IGNORE)
-    long insertAll(List<Usuario> item);
+    void insertAll(List<Usuario> item);
 
     @Query("DELETE FROM Usuario")
     void deleteAll();

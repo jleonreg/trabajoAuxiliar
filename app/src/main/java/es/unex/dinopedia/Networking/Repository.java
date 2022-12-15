@@ -1,21 +1,13 @@
 package es.unex.dinopedia.Networking;
 
-import static androidx.core.content.PackageManagerCompat.LOG_TAG;
-
-import android.util.Log;
-
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
-
-import java.util.Arrays;
 import java.util.List;
-
 import es.unex.dinopedia.AppExecutors.AppExecutors;
 import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Model.Logro;
-import es.unex.dinopedia.Networking.DataSource;
 import es.unex.dinopedia.roomdb.DinosaurioDao;
 import es.unex.dinopedia.roomdb.LogroDao;
 
@@ -107,5 +99,22 @@ public class Repository {
 
     public Dinosaurio getDino(String nombre){
         return dinoDAO.getDinosaurioString(nombre);
+    }
+
+    public Dinosaurio getDino(long id){
+        return dinoDAO.getDinosaurioId(id);
+    }
+
+    public void actualizarDinosaurio(Dinosaurio d){
+        dinoDAO.update(d);
+    }
+
+    public void limpiar(){
+        dinoDAO.deleteAll();
+        logroDAO.deleteAll();
+    }
+
+    public void quitarFavoritos(){
+        dinoDAO.quitarFavorite();
     }
 }
