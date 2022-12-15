@@ -1,9 +1,10 @@
-package es.unex.dinopedia;
+package es.unex.dinopedia.ViewModelFactory;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import es.unex.dinopedia.Networking.Repository;
+import es.unex.dinopedia.ViewModel.MainActivityViewModel;
 
 public class MainViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 

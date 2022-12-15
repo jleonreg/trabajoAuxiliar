@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,20 +14,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import es.unex.dinopedia.AppContainer;
 import es.unex.dinopedia.AppExecutors.AppExecutors;
 import es.unex.dinopedia.Activities.CombateResultActivity;
-import es.unex.dinopedia.LocalDataSource;
-import es.unex.dinopedia.LocalRepository;
-import es.unex.dinopedia.MainActivityViewModel;
+import es.unex.dinopedia.Networking.LocalDataSource;
+import es.unex.dinopedia.Networking.LocalRepository;
+import es.unex.dinopedia.ViewModel.MainActivityViewModel;
 import es.unex.dinopedia.Model.Dinosaurio;
-import es.unex.dinopedia.Adapters.DinosaurioAdapter;
-import es.unex.dinopedia.Model.HistorialCombate;
 import es.unex.dinopedia.Activities.HistorialCombateActivity;
-import es.unex.dinopedia.Model.Logro;
 import es.unex.dinopedia.MyApplication;
 import es.unex.dinopedia.Networking.DataSource;
 import es.unex.dinopedia.Networking.Repository;
@@ -103,8 +97,10 @@ public class CombateFragment extends Fragment {
         bCombate.setOnClickListener(v -> {
             String dino1 = mSpinnerdino1.getSelectedItem().toString();
             String dino2 = mSpinnerdino2.getSelectedItem().toString();
-            dinosaurio1 = mRepository.getDino(dino1);
-            dinosaurio2 = mRepository.getDino(dino2);
+            AppExecutors.getInstance().diskIO().execute(() -> {
+                dinosaurio1 = mRepository.getDino(dino1);
+                dinosaurio2 = mRepository.getDino(dino2);
+            });
             combatir();
         });
     }
@@ -114,23 +110,29 @@ public class CombateFragment extends Fragment {
             Intent intent = new Intent(context, CombateResultActivity.class);
             if (Float.parseFloat(dinosaurio1.getLengthmeters()) < Float.parseFloat(dinosaurio2.getLengthmeters())) {
                 intent.putExtra("GANADOR", dinosaurio2.getName());
-                mLocalRepository.insertarHistorial(dinosaurio1, dinosaurio2, "Gana dino2");
-                modificarLogroPrimerCombate();
-                cambiarLogro(dinosaurio2);
+                AppExecutors.getInstance().diskIO().execute(() -> {
+                    mLocalRepository.insertarHistorial(dinosaurio1, dinosaurio2, "Gana dino2");
+                    modificarLogroPrimerCombate();
+                    cambiarLogro(dinosaurio2);
+                });
             }
             if (Float.parseFloat(dinosaurio1.getLengthmeters()) > Float.parseFloat(dinosaurio2.getLengthmeters())) {
                 intent.putExtra("GANADOR", dinosaurio1.getName());
-                mLocalRepository.insertarHistorial(dinosaurio1, dinosaurio2, "Gana dino1");
-                modificarLogroPrimerCombate();
-                cambiarLogro(dinosaurio1);
+                AppExecutors.getInstance().diskIO().execute(() -> {
+                    mLocalRepository.insertarHistorial(dinosaurio1, dinosaurio2, "Gana dino1");
+                    modificarLogroPrimerCombate();
+                    cambiarLogro(dinosaurio1);
+                });
             }
             if (Float.parseFloat(dinosaurio1.getLengthmeters()) == Float.parseFloat(dinosaurio2.getLengthmeters())) {
                 intent.putExtra("EMPATE1", dinosaurio1.getName());
                 intent.putExtra("EMPATE2", dinosaurio2.getName());
-                mLocalRepository.insertarHistorial(dinosaurio1, dinosaurio2, "Empate");
-                modificarLogroPrimerCombate();
-                cambiarLogro(dinosaurio1);
-                cambiarLogro(dinosaurio2);
+                AppExecutors.getInstance().diskIO().execute(() -> {
+                    mLocalRepository.insertarHistorial(dinosaurio1, dinosaurio2, "Empate");
+                    modificarLogroPrimerCombate();
+                    cambiarLogro(dinosaurio1);
+                    cambiarLogro(dinosaurio2);
+                });
             }
             startActivity(intent);
         }

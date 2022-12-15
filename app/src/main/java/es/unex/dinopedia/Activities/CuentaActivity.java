@@ -2,14 +2,18 @@ package es.unex.dinopedia.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.lifecycle.ViewModelProvider;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
-import es.unex.dinopedia.AppExecutors.AppExecutors;
-import es.unex.dinopedia.LocalDataSource;
-import es.unex.dinopedia.LocalRepository;
+
+import es.unex.dinopedia.AppContainer;
+import es.unex.dinopedia.ViewModel.CuentaActivityViewModel;
+import es.unex.dinopedia.MyApplication;
+import es.unex.dinopedia.Networking.LocalRepository;
 import es.unex.dinopedia.Model.Usuario;
 import es.unex.dinopedia.R;
 import es.unex.dinopedia.roomdb.DinopediaDatabase;
@@ -24,7 +28,7 @@ public class CuentaActivity extends AppCompatActivity {
     private EditText eNUsuario;
     private Switch swModo;
     private Switch swInfoDino;
-    private LocalRepository mLocalRepository;
+    private CuentaActivityViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +41,9 @@ public class CuentaActivity extends AppCompatActivity {
         eNUsuario = findViewById(R.id.eTUsuario);
         swModo = findViewById(R.id.swModo);
         swInfoDino = findViewById(R.id.sInfoDino);
-        mLocalRepository = LocalRepository.getInstance(DinopediaDatabase.getInstance(CuentaActivity.this).getHistorialCombateDao(), DinopediaDatabase.getInstance(CuentaActivity.this).getUsuarioDao(), LocalDataSource.getInstance());
+
+        AppContainer appContainer = ((MyApplication) getApplication()).appContainer;
+        mViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory)appContainer.cuentaFactory).get(CuentaActivityViewModel.class);
 
         activarSwitch();
 
@@ -63,7 +69,7 @@ public class CuentaActivity extends AppCompatActivity {
 
     private void cambiarSwitch(){
         Switch swModo = findViewById(R.id.swModo);
-        Usuario u = mLocalRepository.getUsuario();
+        Usuario u = mViewModel.getUsuario();
         if(u.isModo()){
             swModo.setChecked(true);
         }
@@ -73,7 +79,7 @@ public class CuentaActivity extends AppCompatActivity {
     }
 
     private void activarSwitch(){
-        Usuario u = mLocalRepository.getUsuario();
+        Usuario u = mViewModel.getUsuario();
         if(u!=null) {
             if (u.isInfoDino()) {
                 swInfoDino.setChecked(true);
@@ -86,14 +92,14 @@ public class CuentaActivity extends AppCompatActivity {
     private void botonCambiar(){
         bCambiar.setOnClickListener(view -> {
             DinopediaDatabase database = DinopediaDatabase.getInstance(CuentaActivity.this);
-            Usuario u = new Usuario(mLocalRepository.getUsuario().getId(), eNUsuario.getText().toString(), mLocalRepository.getUsuario().isModo(), mLocalRepository.getUsuario().isInfoDino());
+            Usuario u = new Usuario(mViewModel.getUsuario().getId(), eNUsuario.getText().toString(), mViewModel.getUsuario().isModo(), mViewModel.getUsuario().isInfoDino());
             database.getUsuarioDao().update(u);
         });
     }
 
     private void botonCerrarSesion(){
         bCerrarSesion.setOnClickListener(view -> {
-            mLocalRepository.borrarTodo();
+            mViewModel.borrarTodo();
             finish();
         });
     }
@@ -114,11 +120,11 @@ public class CuentaActivity extends AppCompatActivity {
 
     private void switchModo() {
         swModo.setOnClickListener(view -> {
-            Usuario aux = mLocalRepository.getUsuario();
+            Usuario aux = mViewModel.getUsuario();
             if (aux.isModo() == false) {
-                mLocalRepository.actualizarModoUsuario(aux.getId(), true);
+                mViewModel.actualizarModoUsuario(aux.getId(), true);
             } else {
-                mLocalRepository.actualizarModoUsuario(aux.getId(), false);
+                mViewModel.actualizarModoUsuario(aux.getId(), false);
             }
             if (swModo.isChecked()) {
                 CuentaActivity.this.setDayNight(0);
@@ -131,14 +137,14 @@ public class CuentaActivity extends AppCompatActivity {
     private void switchInfoDino() {
         swInfoDino.setOnClickListener(v -> {
             if(swInfoDino.isChecked()){
-                Usuario u = mLocalRepository.getUsuario();
+                Usuario u = mViewModel.getUsuario();
                 u.setInfoDino(true);
                 DinopediaDatabase.getInstance(CuentaActivity.this).getUsuarioDao().update(u);
             }
             else{
-                Usuario u = mLocalRepository.getUsuario();
+                Usuario u = mViewModel.getUsuario();
                 u.setInfoDino(false);
-                mLocalRepository.actualizar(u);
+                mViewModel.actualizar(u);
             }
         });
     }

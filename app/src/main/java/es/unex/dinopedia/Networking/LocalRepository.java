@@ -1,4 +1,4 @@
-package es.unex.dinopedia;
+package es.unex.dinopedia.Networking;
 
 
 import androidx.lifecycle.LiveData;

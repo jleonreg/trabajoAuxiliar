@@ -9,16 +9,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import java.util.List;
 
 import es.unex.dinopedia.AppContainer;
-import es.unex.dinopedia.AppExecutors.AppExecutors;
-import es.unex.dinopedia.MainActivityViewModel;
-import es.unex.dinopedia.Model.Logro;
+import es.unex.dinopedia.ViewModel.MainActivityViewModel;
 import es.unex.dinopedia.Adapters.LogroAdapter;
 import es.unex.dinopedia.MyApplication;
 import es.unex.dinopedia.R;
-import es.unex.dinopedia.roomdb.DinopediaDatabase;
 
 public class AlbumFragment extends Fragment {
 

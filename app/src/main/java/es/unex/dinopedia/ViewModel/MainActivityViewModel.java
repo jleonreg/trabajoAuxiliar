@@ -1,4 +1,4 @@
-package es.unex.dinopedia;
+package es.unex.dinopedia.ViewModel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
