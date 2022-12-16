@@ -38,10 +38,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         AppContainer appContainer = ((MyApplication) getApplication()).appContainer;
         mViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory)appContainer.mainFactory).get(MainActivityViewModel.class);
 
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            mViewModel.quitarFavoritos();
-        });
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 

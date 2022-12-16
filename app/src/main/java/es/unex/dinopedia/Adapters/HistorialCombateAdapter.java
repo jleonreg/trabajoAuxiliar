@@ -78,7 +78,7 @@ public class HistorialCombateAdapter extends RecyclerView.Adapter<HistorialComba
         }
 
         public void bind(final HistorialCombate hC, final OnItemClickListener listener) {
-            nombre.setText(hC.getDinosaurio1()+ "-" + hC.getDinosaurio2() + "-" + hC.getEstado());
+            nombre.setText(hC.getDinosaurio1()+ " - " + hC.getDinosaurio2() + " - " + hC.getEstado());
             itemView.setOnClickListener(v -> listener.onItemClick(hC));
         }
     }

@@ -6,6 +6,45 @@
     android:layout_height="match_parent"
     tools:context=".Activities.IniciarSesionActivity">
 
+    <Button
+        android:id="@+id/bCompartir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Compartir"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.939" />
+
+    <ImageView
+        android:id="@+id/iVCarnivoro"
+        android:layout_width="65dp"
+        android:layout_height="90dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tDieta"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.293"
+        app:srcCompat="@drawable/victoria_carnivoro" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dieta:"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.143"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tNombre"
+        app:layout_constraintVertical_bias="0.143" />
+
     <TextView
         android:id="@+id/tNombre"
         android:layout_width="wrap_content"
@@ -17,7 +56,7 @@
         app:layout_constraintHorizontal_bias="0.223"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.117" />
+        app:layout_constraintVertical_bias="0.149" />
 
     <TextView
         android:id="@+id/tDieta"
@@ -30,7 +69,17 @@
         app:layout_constraintHorizontal_bias="0.647"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textView2"
-        app:layout_constraintVertical_bias="0.003" />
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/iVHerbivoro"
+        android:layout_width="65dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="184dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/tDieta"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/victoria_herbivoro" />
 
     <TextView
         android:id="@+id/tLivedIn"
@@ -43,7 +92,20 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/tDieta"
         app:layout_constraintTop_toTopOf="@+id/textView5"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.004" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vivió en:"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintVertical_bias="0.099" />
 
     <TextView
         android:id="@+id/tType"
@@ -69,7 +131,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/tType"
         app:layout_constraintTop_toTopOf="@+id/textView11"
-        app:layout_constraintVertical_bias="0.005" />
+        app:layout_constraintVertical_bias="0.006" />
 
     <TextView
         android:id="@+id/tPeriodName"
@@ -82,7 +144,21 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/tSpecies"
         app:layout_constraintTop_toTopOf="@+id/textView8"
-        app:layout_constraintVertical_bias="0.008" />
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="67dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="36dp"
+        android:text="Periodo:"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView11"
+        app:layout_constraintTop_toBottomOf="@+id/textView11"
+        app:layout_constraintVertical_bias="0.054" />
 
     <TextView
         android:id="@+id/tLengthMeters"
@@ -97,84 +173,6 @@
         app:layout_constraintTop_toTopOf="@+id/textView9"
         app:layout_constraintVertical_bias="0.0" />
 
-    <Switch
-        android:id="@+id/sFavorito"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
-        android:layout_marginEnd="24dp"
-        android:minHeight="48dp"
-        android:text="Favorito"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/bCompartir"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="Compartir"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.939" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Dieta:"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.143"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tNombre"
-        app:layout_constraintVertical_bias="0.138" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Vivió en:"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        app:layout_constraintVertical_bias="0.085" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Tipo:"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textView5"
-        app:layout_constraintTop_toBottomOf="@+id/textView5"
-        app:layout_constraintVertical_bias="0.091" />
-
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="67dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="36dp"
-        android:text="Periodo:"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textView11"
-        app:layout_constraintTop_toBottomOf="@+id/textView11"
-        app:layout_constraintVertical_bias="0.034" />
-
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
@@ -187,7 +185,38 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textView8"
         app:layout_constraintTop_toBottomOf="@+id/textView8"
-        app:layout_constraintVertical_bias="0.042" />
+        app:layout_constraintVertical_bias="0.079" />
+
+    <ImageView
+        android:id="@+id/iVTriasico"
+        android:layout_width="65dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="448dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/tPeriodName"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/victoria_triasico" />
+
+    <ImageView
+        android:id="@+id/iVCretacico"
+        android:layout_width="65dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="448dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/tDieta"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/victoria_cretacico" />
+
+    <ImageView
+        android:id="@+id/iVJurasico"
+        android:layout_width="192dp"
+        android:layout_height="260dp"
+        android:layout_marginStart="96dp"
+        android:layout_marginTop="360dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/victoria_jurasico" />
 
     <TextView
         android:id="@+id/textView11"
@@ -201,71 +230,42 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textView6"
         app:layout_constraintTop_toBottomOf="@+id/textView6"
-        app:layout_constraintVertical_bias="0.054" />
+        app:layout_constraintVertical_bias="0.047" />
 
-    <ImageView
-        android:id="@+id/iVCarnivoro"
-        android:layout_width="65dp"
-        android:layout_height="90dp"
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tipo:"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/tDieta"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.193"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/victoria_carnivoro" />
-
-    <ImageView
-        android:id="@+id/iVHerbivoro"
-        android:layout_width="65dp"
-        android:layout_height="90dp"
-        android:layout_marginTop="124dp"
-        app:layout_constraintStart_toStartOf="@+id/tDieta"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/victoria_herbivoro" />
+        app:layout_constraintStart_toStartOf="@+id/textView5"
+        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        app:layout_constraintVertical_bias="0.096" />
 
     <ImageView
         android:id="@+id/iVOmnivoro"
         android:layout_width="65dp"
         android:layout_height="90dp"
-        android:layout_marginTop="124dp"
+        android:layout_marginTop="184dp"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/tDieta"
         app:layout_constraintTop_toTopOf="parent"
-        android:visibility="invisible"
         app:srcCompat="@drawable/victoria_omnivoro" />
 
-    <ImageView
-        android:id="@+id/iVJurasico"
-        android:layout_width="192dp"
-        android:layout_height="260dp"
-        android:layout_marginStart="108dp"
-        android:layout_marginTop="312dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+    <Switch
+        android:id="@+id/sFavorito"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="96dp"
+        android:layout_marginEnd="40dp"
+        android:minHeight="48dp"
+        android:text="Favorito"
         android:visibility="invisible"
-        app:srcCompat="@drawable/victoria_jurasico" />
-
-    <ImageView
-        android:id="@+id/iVCretacico"
-        android:layout_width="65dp"
-        android:layout_height="90dp"
-        android:layout_marginTop="396dp"
-        app:layout_constraintStart_toStartOf="@+id/tDieta"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/victoria_cretacico" />
-
-    <ImageView
-        android:id="@+id/iVTriasico"
-        android:layout_width="65dp"
-        android:layout_height="90dp"
-        android:layout_marginTop="396dp"
-        app:layout_constraintStart_toStartOf="@+id/tPeriodName"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/victoria_triasico" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
