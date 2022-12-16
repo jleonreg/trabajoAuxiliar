@@ -26,6 +26,14 @@ public class IniciarSesionActivityViewModel extends ViewModel {
         mLogros = mRepository.getCurrentNewsLogros();
     }
 
+    public Usuario getUsuario(){
+        return mLocalRepository.getUsuario();
+    }
+
+    public void insertar(Usuario u){
+        mLocalRepository.insertarUsuario(u);
+    }
+
     public void actualizar(Usuario u){
         mLocalRepository.actualizar(u);
     }

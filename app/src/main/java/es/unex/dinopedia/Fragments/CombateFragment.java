@@ -92,8 +92,8 @@ public class CombateFragment extends Fragment {
             AppExecutors.getInstance().diskIO().execute(() -> {
                 dinosaurio1 = mViewModel.getDino(dino1);
                 dinosaurio2 = mViewModel.getDino(dino2);
+                AppExecutors.getInstance().mainThread().execute(() -> combatir());
             });
-            combatir();
         });
     }
 

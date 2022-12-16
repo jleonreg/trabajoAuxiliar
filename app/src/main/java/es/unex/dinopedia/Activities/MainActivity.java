@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         mViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory)appContainer.mainFactory).get(MainActivityViewModel.class);
 
         AppExecutors.getInstance().diskIO().execute(() -> {
-            mViewModel.limpiar();
             mViewModel.quitarFavoritos();
         });
 

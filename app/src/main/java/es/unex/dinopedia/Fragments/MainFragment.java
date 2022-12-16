@@ -103,7 +103,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private void botonCuenta(){
         bCuenta.setOnClickListener(v -> {
             Intent intent = new Intent(context, CuentaActivity.class);
-            intent.putExtra("USUARIO", mViewModel.getUsuario().getName());
+            AppExecutors.getInstance().diskIO().execute(() -> intent.putExtra("USUARIO", mViewModel.getUsuario().getName()));
             AppExecutors.getInstance().mainThread().execute(()->startActivityForResult(intent, 2));
         });
     }

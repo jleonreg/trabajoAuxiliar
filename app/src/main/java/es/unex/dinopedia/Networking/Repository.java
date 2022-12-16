@@ -109,11 +109,6 @@ public class Repository {
         dinoDAO.update(d);
     }
 
-    public void limpiar(){
-        dinoDAO.deleteAll();
-        logroDAO.deleteAll();
-    }
-
     public void quitarFavoritos(){
         dinoDAO.quitarFavorite();
     }

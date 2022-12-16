@@ -72,7 +72,7 @@ public class DinosaurioInfoActivity extends AppCompatActivity {
         swFavorito.setOnClickListener(v -> {
             if (d!=null) {
                 d.setFavorite(swFavorito.isChecked()?"1":"0");
-                mViewModel.actualizarDinosaurio(d);
+                AppExecutors.getInstance().diskIO().execute(() -> mViewModel.actualizarDinosaurio(d));
             }
         });
     }

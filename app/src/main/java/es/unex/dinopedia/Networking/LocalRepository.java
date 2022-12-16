@@ -68,6 +68,10 @@ public class LocalRepository {
         return userDAO.getUsuario();
     }
 
+    public void insertarUsuario(Usuario u){
+        userDAO.insert(u);
+    }
+
     public void borrarTodo(){
         userDAO.deleteAll();
     }

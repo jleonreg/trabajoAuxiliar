@@ -36,7 +36,10 @@ public class IniciarSesionActivity extends AppCompatActivity {
             u.setName(eDName.getText().toString());
             u.setInfoDino(false);
             AppExecutors.getInstance().diskIO().execute(() -> {
-                mViewModel.actualizar(u);
+                if(mViewModel.getUsuario()!=null)
+                    mViewModel.actualizar(u);
+                else
+                    mViewModel.insertar(u);
                 mViewModel.marcarLogro();
             });
             finish();

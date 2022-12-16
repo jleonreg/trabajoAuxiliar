@@ -34,11 +34,6 @@ public class MainActivityViewModel extends ViewModel {
         mRepository.doFetch();
     }
 
-    public void limpiar(){
-        mRepository.limpiar();
-        mLocalRepository.limpiar();
-    }
-
     public void quitarFavoritos(){
         mRepository.quitarFavoritos();
     }

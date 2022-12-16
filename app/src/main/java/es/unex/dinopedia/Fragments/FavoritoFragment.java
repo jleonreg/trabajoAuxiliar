@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.unex.dinopedia.AppContainer;
+import es.unex.dinopedia.AppExecutors.AppExecutors;
 import es.unex.dinopedia.ViewModel.FavoritoFragmentViewModel;
 import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Adapters.DinosaurioAdapter;
@@ -80,7 +81,7 @@ public class FavoritoFragment extends Fragment {
 
     public void comprobarLogro(){
         if (dinoList.size() > 0) {
-            mViewModel.comprobarLogros();
+            AppExecutors.getInstance().diskIO().execute(() -> mViewModel.comprobarLogros());
         }
     }
 }
