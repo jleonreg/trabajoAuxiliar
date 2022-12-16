@@ -9,6 +9,26 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <TextView
+                android:id="@+id/textViewTB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Batalla"
+                android:textColor="@color/white"
+                android:textSize="65px" />
+
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -17,60 +37,80 @@
             android:id="@+id/bHistorial"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="72dp"
             android:text="Historial de combates"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/bCombate"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:text="COMBATIR"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView7"
+            app:layout_constraintVertical_bias="0.698" />
+
+        <Spinner
+            android:id="@+id/mSpinnerdino2"
+            android:layout_width="152dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="36dp"
+            android:contentDescription="@string/app_name"
+            android:minHeight="48dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView7"
+            app:layout_constraintVertical_bias="0.129" />
+
+        <Spinner
+            android:id="@+id/mSpinnerdino1"
+            android:layout_width="152dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="36dp"
+            android:contentDescription="@string/app_name"
+            android:minHeight="48dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/mSpinnerdino2"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView7"
+            app:layout_constraintVertical_bias="0.129" />
+
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="match_parent"
+            android:layout_height="429dp"
+            android:src="@drawable/combatedino"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.274"
+            tools:layout_editor_absoluteX="16dp" />
+
+        <TextView
+            android:id="@+id/textDino1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginBottom="20dp"
+            android:text="Dino 1:"
+            app:layout_constraintBottom_toTopOf="@+id/mSpinnerdino1"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/textDino2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="148dp"
+            android:layout_marginBottom="20dp"
+            android:text="Dino 2:"
+            app:layout_constraintBottom_toTopOf="@+id/mSpinnerdino2"
+            app:layout_constraintStart_toEndOf="@+id/textDino1" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <Spinner
-        android:id="@+id/mSpinnerdino1"
-        android:layout_width="175dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="440dp"
-        android:contentDescription="@string/app_name"
-        android:minHeight="48dp" />
-
-    <Spinner
-        android:id="@+id/mSpinnerdino2"
-        android:layout_width="175dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="225dp"
-        android:layout_marginTop="440dp"
-        android:contentDescription="@string/app_name"
-        android:minHeight="48dp" />
-
-    <TextView
-        android:id="@+id/textDino1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="405dp"
-        android:text="Dino 1:" />
-
-    <TextView
-        android:id="@+id/textDino2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="225dp"
-        android:layout_marginTop="405dp"
-        android:text="Dino 2:" />
-
-    <Button
-        android:id="@+id/bCombate"
-        android:layout_width="150dp"
-        android:layout_height="60dp"
-        android:layout_marginLeft="130dp"
-        android:layout_marginTop="520dp"
-        android:text="COMBATIR" />
-
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="match_parent"
-        android:layout_height="429dp"
-        android:src="@drawable/combatedino" />
 
 </FrameLayout>

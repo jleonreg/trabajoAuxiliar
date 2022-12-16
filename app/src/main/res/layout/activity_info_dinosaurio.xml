@@ -17,7 +17,7 @@
         app:layout_constraintHorizontal_bias="0.223"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.068" />
+        app:layout_constraintVertical_bias="0.117" />
 
     <TextView
         android:id="@+id/tDieta"
@@ -101,7 +101,7 @@
         android:id="@+id/sFavorito"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="72dp"
         android:layout_marginEnd="24dp"
         android:minHeight="48dp"
         android:text="Favorito"
@@ -266,5 +266,26 @@
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="invisible"
         app:srcCompat="@drawable/victoria_triasico" />
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tb_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <TextView
+                android:id="@+id/tv_title_toolbar"
+                android:layout_width="206dp"
+                android:layout_height="wrap_content"
+                android:text="Información"
+                android:textColor="@color/white"
+                android:textSize="65px" />
+
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

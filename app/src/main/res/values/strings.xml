@@ -1,5 +1,19 @@
 <resources>
     <string name="app_name">DinoPedia</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="st1">Encuentra aquí el \'Dinosaurio del día\'. Registrate o accede a tu cuenta para acceder a todo el contenido.</string>
+    <string name="st2">PANTALLA ENCICLOPEDIA</string>
+    <string name="st3">PANTALLA PRINCIPAL</string>
+    <string name="st4">Icono Enciclopedia</string>
+    <string name="st5">¿A quién no le gusta ganar un premio? Y más cuándo es por sorpresa. Continúa utilizando la aplicación y revisa con frecuencia esta pantalla. ¿Quién sabe lo que puedes llegar a desbloquear? ¡SÓLO PARA USUARIOS REGISTRADOS!</string>
+    <string name="st6">Selecciona un dinosaurio y descubre qué esconden estos seres que habitaron nuestro planeta mucho antes que nosotros.</string>
+    <string name="st7">Icono Combate</string>
+    <string name="st8">Sí, por algún extraño motivo todos tenemos algo favorito y en este caso son los dinosaurios que más te gustan. Visualiza tus dinosaurios guardados en esta pantalla. ¡SÓLO PARA USUARIOS REGISTRADOS!</string>
+    <string name="st9">Realiza un combate entre dos dinosaurios. ¿Quién ganará entre estos dos? ¿Un carnívoro ante un herbívoro? Descúbrelo en esta pantalla.</string>
+    <string name="st10">Icono Favoritos</string>
+    <string name="st11">Icono Principal</string>
+    <string name="st12">PANTALLA FAVORITOS</string>
+    <string name="st13">Icono Logro</string>
+    <string name="st14">PANTALLA LOGROS</string>
+    <string name="st15">PANTALLA BATALLA</string>
 </resources>

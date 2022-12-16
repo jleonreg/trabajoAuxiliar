@@ -6,6 +6,26 @@
     android:layout_height="match_parent"
     android:background="#00FFFFFF">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <TextView
+                android:id="@+id/textViewTB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enciclopedia"
+                android:textColor="@color/white"
+                android:textSize="65px" />
+
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/my_recycler_view"
         android:layout_width="415dp"
@@ -20,11 +40,11 @@
         android:layout_width="172dp"
         android:layout_height="59dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="108dp"
         android:background="#00FFFFFF"
         android:contentDescription="@string/hello_blank_fragment"
         app:layout_constraintEnd_toStartOf="@+id/bAplicar"
-        app:layout_constraintHorizontal_bias="0.013"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,8 +52,8 @@
         android:id="@+id/bAplicar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="56dp"
+        android:layout_marginTop="84dp"
+        android:layout_marginEnd="52dp"
         android:text="Aplicar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -42,9 +62,10 @@
         android:id="@+id/bRestaurar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="44dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="48dp"
         android:text="Restaurar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bAplicar" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
