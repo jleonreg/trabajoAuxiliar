@@ -17,14 +17,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import es.unex.dinopedia.AppContainer;
+import es.unex.dinopedia.Networking.AppContainer;
 import es.unex.dinopedia.AppExecutors.AppExecutors;
 import es.unex.dinopedia.Activities.CuentaActivity;
 import es.unex.dinopedia.ViewModel.MainFragmentViewModel;
 import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Adapters.DinosaurioAdapter;
 import es.unex.dinopedia.Activities.IniciarSesionActivity;
-import es.unex.dinopedia.MyApplication;
+import es.unex.dinopedia.Networking.MyApplication;
 import es.unex.dinopedia.R;
 import es.unex.dinopedia.databinding.ActivityMainBinding;
 

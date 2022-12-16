@@ -12,10 +12,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import es.unex.dinopedia.AppContainer;
+import es.unex.dinopedia.Networking.AppContainer;
 import es.unex.dinopedia.AppExecutors.AppExecutors;
 import es.unex.dinopedia.ViewModel.DinosaurioInfoActivityViewModel;
-import es.unex.dinopedia.MyApplication;
+import es.unex.dinopedia.Networking.MyApplication;
 import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Model.Usuario;
 import es.unex.dinopedia.R;

@@ -7,9 +7,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 
 import es.unex.dinopedia.Adapters.HistorialCombateAdapter;
-import es.unex.dinopedia.AppContainer;
+import es.unex.dinopedia.Networking.AppContainer;
 import es.unex.dinopedia.ViewModel.HistorialCombateActivityViewModel;
-import es.unex.dinopedia.MyApplication;
+import es.unex.dinopedia.Networking.MyApplication;
 import es.unex.dinopedia.R;
 
 public class HistorialCombateActivity extends AppCompatActivity {

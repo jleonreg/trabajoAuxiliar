@@ -16,13 +16,13 @@ import android.widget.Spinner;
 
 import java.util.List;
 
-import es.unex.dinopedia.AppContainer;
+import es.unex.dinopedia.Networking.AppContainer;
 import es.unex.dinopedia.AppExecutors.AppExecutors;
 import es.unex.dinopedia.Activities.CombateResultActivity;
 import es.unex.dinopedia.ViewModel.CombateFragmentViewModel;
 import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Activities.HistorialCombateActivity;
-import es.unex.dinopedia.MyApplication;
+import es.unex.dinopedia.Networking.MyApplication;
 import es.unex.dinopedia.R;
 
 public class CombateFragment extends Fragment {

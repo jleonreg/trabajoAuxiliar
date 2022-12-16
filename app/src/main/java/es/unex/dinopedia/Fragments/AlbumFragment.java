@@ -11,9 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import es.unex.dinopedia.ViewModel.AlbumFragmentViewModel;
-import es.unex.dinopedia.AppContainer;
+import es.unex.dinopedia.Networking.AppContainer;
 import es.unex.dinopedia.Adapters.LogroAdapter;
-import es.unex.dinopedia.MyApplication;
+import es.unex.dinopedia.Networking.MyApplication;
 import es.unex.dinopedia.R;
 
 public class AlbumFragment extends Fragment {

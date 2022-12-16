@@ -10,14 +10,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 
-import es.unex.dinopedia.AppContainer;
+import es.unex.dinopedia.Networking.AppContainer;
 import es.unex.dinopedia.AppExecutors.AppExecutors;
 import es.unex.dinopedia.ViewModel.CuentaActivityViewModel;
-import es.unex.dinopedia.MyApplication;
-import es.unex.dinopedia.Networking.LocalRepository;
+import es.unex.dinopedia.Networking.MyApplication;
 import es.unex.dinopedia.Model.Usuario;
 import es.unex.dinopedia.R;
-import es.unex.dinopedia.roomdb.DinopediaDatabase;
 
 public class CuentaActivity extends AppCompatActivity {
 

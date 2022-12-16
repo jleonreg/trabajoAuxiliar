@@ -9,11 +9,9 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.os.Bundle;
 
-import es.unex.dinopedia.AppContainer;
+import es.unex.dinopedia.Networking.AppContainer;
 import es.unex.dinopedia.AppExecutors.AppExecutors;
-import es.unex.dinopedia.MyApplication;
-import es.unex.dinopedia.Networking.LocalDataSource;
-import es.unex.dinopedia.Networking.LocalRepository;
+import es.unex.dinopedia.Networking.MyApplication;
 import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Fragments.AlbumFragment;
 import es.unex.dinopedia.Fragments.CombateFragment;
@@ -21,13 +19,9 @@ import es.unex.dinopedia.Fragments.EnciclopediaFragment;
 import es.unex.dinopedia.Fragments.FavoritoFragment;
 import es.unex.dinopedia.Fragments.MainFragment;
 import es.unex.dinopedia.Interfaz.MainActivityInterface;
-import es.unex.dinopedia.Networking.DataSource;
-import es.unex.dinopedia.Networking.Repository;
 import es.unex.dinopedia.R;
-import es.unex.dinopedia.ViewModel.IniciarSesionActivityViewModel;
 import es.unex.dinopedia.ViewModel.MainActivityViewModel;
 import es.unex.dinopedia.databinding.ActivityMainBinding;
-import es.unex.dinopedia.roomdb.DinopediaDatabase;
 
 public class MainActivity extends AppCompatActivity implements MainActivityInterface {
 

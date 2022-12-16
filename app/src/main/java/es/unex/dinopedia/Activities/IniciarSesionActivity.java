@@ -7,10 +7,10 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 
-import es.unex.dinopedia.AppContainer;
+import es.unex.dinopedia.Networking.AppContainer;
 import es.unex.dinopedia.AppExecutors.AppExecutors;
 import es.unex.dinopedia.ViewModel.IniciarSesionActivityViewModel;
-import es.unex.dinopedia.MyApplication;
+import es.unex.dinopedia.Networking.MyApplication;
 import es.unex.dinopedia.Model.Usuario;
 import es.unex.dinopedia.R;
 
