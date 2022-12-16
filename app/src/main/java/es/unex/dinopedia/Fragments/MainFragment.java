@@ -20,16 +20,13 @@ import java.util.Random;
 import es.unex.dinopedia.AppContainer;
 import es.unex.dinopedia.AppExecutors.AppExecutors;
 import es.unex.dinopedia.Activities.CuentaActivity;
-import es.unex.dinopedia.Networking.LocalDataSource;
-import es.unex.dinopedia.Networking.LocalRepository;
-import es.unex.dinopedia.ViewModel.MainActivityViewModel;
+import es.unex.dinopedia.ViewModel.MainFragmentViewModel;
 import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Adapters.DinosaurioAdapter;
 import es.unex.dinopedia.Activities.IniciarSesionActivity;
 import es.unex.dinopedia.MyApplication;
 import es.unex.dinopedia.R;
 import es.unex.dinopedia.databinding.ActivityMainBinding;
-import es.unex.dinopedia.roomdb.DinopediaDatabase;
 
 
 public class MainFragment extends Fragment implements View.OnClickListener {
@@ -46,7 +43,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private List<Dinosaurio> copiaDinosaurio;
     private Button bCuenta;
     private Button bIniciarSesion;
-    private LocalRepository mLocalRepository;
+    private MainFragmentViewModel mViewModel;
 
     public MainFragment(){
     }
@@ -59,20 +56,15 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         long momento = System.currentTimeMillis();
         fecha = new Date(momento);
         binding = bind;
-        initUsuario();
         dinosaurioDelDia = 0;
-        mLocalRepository = LocalRepository.getInstance(DinopediaDatabase.getInstance(context).getHistorialCombateDao(), DinopediaDatabase.getInstance(context).getUsuarioDao(), LocalDataSource.getInstance());
     }
 
     private void initUsuario(){
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                if(mLocalRepository.getUsuario()!=null)
-                    sesionIniciada=true;
-                else
-                    sesionIniciada=false;
-            }
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            if(mViewModel.getUsuario()!=null)
+                sesionIniciada=true;
+            else
+                sesionIniciada=false;
         });
     }
 
@@ -80,7 +72,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppContainer appContainer = ((MyApplication)  MainFragment.this.getActivity().getApplication()).appContainer;
-        MainActivityViewModel mViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory)appContainer.factory).get(MainActivityViewModel.class);
+        mViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory)appContainer.mainFragmentFactory).get(MainFragmentViewModel.class);
+
+        initUsuario();
+
         mViewModel.getDinos().observe(this, dinosaurios -> {
             dinoList=dinosaurios;
             copiaDinosaurio=dinosaurios;
@@ -108,7 +103,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private void botonCuenta(){
         bCuenta.setOnClickListener(v -> {
             Intent intent = new Intent(context, CuentaActivity.class);
-            intent.putExtra("USUARIO", mLocalRepository.getUsuario().getName());
+            intent.putExtra("USUARIO", mViewModel.getUsuario().getName());
             AppExecutors.getInstance().mainThread().execute(()->startActivityForResult(intent, 2));
         });
     }
@@ -170,16 +165,20 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1){
-            if(mLocalRepository.getUsuario()!=null)
-                sesionIniciada=true;
-            else
-                sesionIniciada=false;
+            AppExecutors.getInstance().diskIO().execute(() -> {
+                if(mViewModel.getUsuario()!=null)
+                    sesionIniciada=true;
+                else
+                    sesionIniciada=false;
+            });
         }
         if(requestCode == 2){
-            if(mLocalRepository.getUsuario()!=null)
-                sesionIniciada=true;
-            else
-                sesionIniciada=false;
+            AppExecutors.getInstance().diskIO().execute(() -> {
+                if(mViewModel.getUsuario()!=null)
+                    sesionIniciada=true;
+                else
+                    sesionIniciada=false;
+            });
         }
     }
 }

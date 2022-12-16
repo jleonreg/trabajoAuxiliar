@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import es.unex.dinopedia.AppContainer;
+import es.unex.dinopedia.AppExecutors.AppExecutors;
 import es.unex.dinopedia.ViewModel.IniciarSesionActivityViewModel;
 import es.unex.dinopedia.MyApplication;
 import es.unex.dinopedia.Model.Usuario;
@@ -34,8 +35,10 @@ public class IniciarSesionActivity extends AppCompatActivity {
             Usuario u = new Usuario();
             u.setName(eDName.getText().toString());
             u.setInfoDino(false);
-            mViewModel.actualizar(u);
-            mViewModel.marcarLogro();
+            AppExecutors.getInstance().diskIO().execute(() -> {
+                mViewModel.actualizar(u);
+                mViewModel.marcarLogro();
+            });
             finish();
         });
     }

@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import es.unex.dinopedia.AppContainer;
+import es.unex.dinopedia.AppExecutors.AppExecutors;
 import es.unex.dinopedia.ViewModel.DinosaurioInfoActivityViewModel;
 import es.unex.dinopedia.MyApplication;
 import es.unex.dinopedia.Model.Dinosaurio;
@@ -54,15 +55,19 @@ public class DinosaurioInfoActivity extends AppCompatActivity {
         mViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory)appContainer.dinoInfoFactory).get(DinosaurioInfoActivityViewModel.class);
 
         botonCompartir();
-        marcarFavorito();
-        cargarVariable();
-        d = mViewModel.getDino(id);
-        actualizarDinosaurio(d);
-        mostrarImagenes(d);
-        if(d.getFavorite().equals("0"))
-            swFavorito.setChecked(false);
-        else
-            swFavorito.setChecked(true);
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            marcarFavorito();
+            cargarVariable();
+            d = mViewModel.getDino(id);
+            AppExecutors.getInstance().mainThread().execute(() -> {
+                actualizarDinosaurio(d);
+                mostrarImagenes(d);
+                if(d.getFavorite().equals("0"))
+                    swFavorito.setChecked(false);
+                else
+                    swFavorito.setChecked(true);
+            });
+        });
 
         swFavorito.setOnClickListener(v -> {
             if (d!=null) {

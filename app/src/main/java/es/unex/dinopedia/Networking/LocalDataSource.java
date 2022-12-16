@@ -3,6 +3,8 @@ package es.unex.dinopedia.Networking;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import java.util.List;
+
+import es.unex.dinopedia.AppExecutors.AppExecutors;
 import es.unex.dinopedia.Model.HistorialCombate;
 import es.unex.dinopedia.Model.Usuario;
 
@@ -33,6 +35,5 @@ public class LocalDataSource {
     public LiveData<List<HistorialCombate>> getCurrentHC() {
         return mDownloadedHC;
     }
-
 
 }

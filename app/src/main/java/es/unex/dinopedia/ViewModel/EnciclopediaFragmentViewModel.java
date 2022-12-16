@@ -13,33 +13,32 @@ import es.unex.dinopedia.Model.Usuario;
 import es.unex.dinopedia.Networking.LocalRepository;
 import es.unex.dinopedia.Networking.Repository;
 
-public class MainActivityViewModel extends ViewModel {
+public class EnciclopediaFragmentViewModel extends ViewModel {
 
     private final Repository mRepository;
-    private final LocalRepository mLocalRepository;
     private final LiveData<List<Dinosaurio>> mDinos;
     private final LiveData<List<Logro>> mLogros;
-    private final LiveData<List<Usuario>> mUser;
 
 
-    public MainActivityViewModel(LocalRepository localRepository, Repository repository) {
+    public EnciclopediaFragmentViewModel(Repository repository) {
         mRepository = repository;
-        mLocalRepository = localRepository;
         mDinos = mRepository.getCurrentNewsDinos();
         mLogros = mRepository.getCurrentNewsLogros();
-        mUser = mLocalRepository.getCurrentNewsUser();
     }
 
     public void onRefresh() {
         mRepository.doFetch();
     }
 
-    public void limpiar(){
-        mRepository.limpiar();
-        mLocalRepository.limpiar();
+    public LiveData<List<Dinosaurio>> getDinos(){
+        return mRepository.getCurrentNewsDinos();
     }
 
-    public void quitarFavoritos(){
-        mRepository.quitarFavoritos();
+    public LiveData<List<Dinosaurio>> getDinosOpciones(){
+        return mRepository.getDinosOpciones();
+    }
+
+    public void setFiltro(String opcion){
+        mRepository.setFiltro(opcion);
     }
 }

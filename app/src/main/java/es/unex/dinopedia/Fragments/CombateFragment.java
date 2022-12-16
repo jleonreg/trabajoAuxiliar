@@ -19,16 +19,11 @@ import java.util.List;
 import es.unex.dinopedia.AppContainer;
 import es.unex.dinopedia.AppExecutors.AppExecutors;
 import es.unex.dinopedia.Activities.CombateResultActivity;
-import es.unex.dinopedia.Networking.LocalDataSource;
-import es.unex.dinopedia.Networking.LocalRepository;
-import es.unex.dinopedia.ViewModel.MainActivityViewModel;
+import es.unex.dinopedia.ViewModel.CombateFragmentViewModel;
 import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Activities.HistorialCombateActivity;
 import es.unex.dinopedia.MyApplication;
-import es.unex.dinopedia.Networking.DataSource;
-import es.unex.dinopedia.Networking.Repository;
 import es.unex.dinopedia.R;
-import es.unex.dinopedia.roomdb.DinopediaDatabase;
 
 public class CombateFragment extends Fragment {
 
@@ -41,13 +36,10 @@ public class CombateFragment extends Fragment {
     private Dinosaurio dinosaurio2;
     private Button bCombate;
     private Button bHistorial;
-    private Repository mRepository;
-    private LocalRepository mLocalRepository;
+    private CombateFragmentViewModel mViewModel;
 
     public CombateFragment(Context cont) {
         context = cont;
-        mRepository = Repository.getInstance(DinopediaDatabase.getInstance(context).getDinosaurioDao(), DinopediaDatabase.getInstance(context).getLogroDao(), DataSource.getInstance());
-        mLocalRepository = LocalRepository.getInstance(DinopediaDatabase.getInstance(context).getHistorialCombateDao(), DinopediaDatabase.getInstance(context).getUsuarioDao(), LocalDataSource.getInstance());
     }
 
     public static CombateFragment newInstance(Context cont) {
@@ -61,7 +53,7 @@ public class CombateFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         AppContainer appContainer = ((MyApplication) CombateFragment.this.getActivity().getApplication()).appContainer;
-        MainActivityViewModel mViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory)appContainer.factory).get(MainActivityViewModel.class);
+        mViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory)appContainer.combateFragmentFactory).get(CombateFragmentViewModel.class);
         mViewModel.getDinosNombres().observe(this, dinosaurios -> {
             dinoListNombres=dinosaurios;
             adp = new ArrayAdapter<>(context, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, dinoListNombres);
@@ -98,8 +90,8 @@ public class CombateFragment extends Fragment {
             String dino1 = mSpinnerdino1.getSelectedItem().toString();
             String dino2 = mSpinnerdino2.getSelectedItem().toString();
             AppExecutors.getInstance().diskIO().execute(() -> {
-                dinosaurio1 = mRepository.getDino(dino1);
-                dinosaurio2 = mRepository.getDino(dino2);
+                dinosaurio1 = mViewModel.getDino(dino1);
+                dinosaurio2 = mViewModel.getDino(dino2);
             });
             combatir();
         });
@@ -111,7 +103,7 @@ public class CombateFragment extends Fragment {
             if (Float.parseFloat(dinosaurio1.getLengthmeters()) < Float.parseFloat(dinosaurio2.getLengthmeters())) {
                 intent.putExtra("GANADOR", dinosaurio2.getName());
                 AppExecutors.getInstance().diskIO().execute(() -> {
-                    mLocalRepository.insertarHistorial(dinosaurio1, dinosaurio2, "Gana dino2");
+                    mViewModel.insertarHistorial(dinosaurio1, dinosaurio2, "Gana dino2");
                     modificarLogroPrimerCombate();
                     cambiarLogro(dinosaurio2);
                 });
@@ -119,7 +111,7 @@ public class CombateFragment extends Fragment {
             if (Float.parseFloat(dinosaurio1.getLengthmeters()) > Float.parseFloat(dinosaurio2.getLengthmeters())) {
                 intent.putExtra("GANADOR", dinosaurio1.getName());
                 AppExecutors.getInstance().diskIO().execute(() -> {
-                    mLocalRepository.insertarHistorial(dinosaurio1, dinosaurio2, "Gana dino1");
+                    mViewModel.insertarHistorial(dinosaurio1, dinosaurio2, "Gana dino1");
                     modificarLogroPrimerCombate();
                     cambiarLogro(dinosaurio1);
                 });
@@ -128,7 +120,7 @@ public class CombateFragment extends Fragment {
                 intent.putExtra("EMPATE1", dinosaurio1.getName());
                 intent.putExtra("EMPATE2", dinosaurio2.getName());
                 AppExecutors.getInstance().diskIO().execute(() -> {
-                    mLocalRepository.insertarHistorial(dinosaurio1, dinosaurio2, "Empate");
+                    mViewModel.insertarHistorial(dinosaurio1, dinosaurio2, "Empate");
                     modificarLogroPrimerCombate();
                     cambiarLogro(dinosaurio1);
                     cambiarLogro(dinosaurio2);
@@ -139,29 +131,29 @@ public class CombateFragment extends Fragment {
     }
 
     public void modificarLogroPrimerCombate(){
-        if(mLocalRepository.obtenerLista().size()>=1){
-            mRepository.comprobarLogros("Realiza tu primer combate con la aplicación");
+        if(mViewModel.obtenerLista().size()>=1){
+            mViewModel.comprobarLogros("Realiza tu primer combate con la aplicación");
         }
     }
 
     public void cambiarLogro(Dinosaurio dino){
         if(dino.getDiet().equals("Carnivoro")) {
-            mRepository.comprobarLogros("Primera victoria de un dinosaurio carnívoro en tu aplicación");
+            mViewModel.comprobarLogros("Primera victoria de un dinosaurio carnívoro en tu aplicación");
         }
         if(dino.getDiet().equals("Herbivoro")) {
-            mRepository.comprobarLogros("Primera victoria de un dinosaurio herbívoro en tu aplicación");
+            mViewModel.comprobarLogros("Primera victoria de un dinosaurio herbívoro en tu aplicación");
         }
         if(dino.getDiet().equals("Omnivoro")) {
-            mRepository.comprobarLogros("Primera victoria de un dinosaurio omnivoro en tu aplicación");
+            mViewModel.comprobarLogros("Primera victoria de un dinosaurio omnivoro en tu aplicación");
         }
         if(dino.getPeriodname().equals("Jurasico")) {
-            mRepository.comprobarLogros("Primera victoria de un dinosaurio del jurásico en tu aplicación");
+            mViewModel.comprobarLogros("Primera victoria de un dinosaurio del jurásico en tu aplicación");
         }
         if(dino.getPeriodname().equals("Cretacico")) {
-            mRepository.comprobarLogros("Primera victoria de un dinosaurio del cretácico en tu aplicación");
+            mViewModel.comprobarLogros("Primera victoria de un dinosaurio del cretácico en tu aplicación");
         }
         if(dino.getPeriodname().equals("Triasico")) {
-            mRepository.comprobarLogros("Primera victoria de un dinosaurio del triásico en tu aplicación");
+            mViewModel.comprobarLogros("Primera victoria de un dinosaurio del triásico en tu aplicación");
         }
     }
 

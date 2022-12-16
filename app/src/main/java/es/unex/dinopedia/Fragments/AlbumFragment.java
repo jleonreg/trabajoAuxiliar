@@ -10,8 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import es.unex.dinopedia.ViewModel.AlbumFragmentViewModel;
 import es.unex.dinopedia.AppContainer;
-import es.unex.dinopedia.ViewModel.MainActivityViewModel;
 import es.unex.dinopedia.Adapters.LogroAdapter;
 import es.unex.dinopedia.MyApplication;
 import es.unex.dinopedia.R;
@@ -22,6 +22,7 @@ public class AlbumFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private LogroAdapter mAdapter;
     private Context context;
+    private AlbumFragmentViewModel mViewModel;
 
     public AlbumFragment(Context cont) {
         context = cont;
@@ -33,7 +34,7 @@ public class AlbumFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         AppContainer appContainer = ((MyApplication) AlbumFragment.this.getActivity().getApplication()).appContainer;
-        MainActivityViewModel mViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory)appContainer.factory).get(MainActivityViewModel.class);
+        mViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory)appContainer.albumFragmentFactory).get(AlbumFragmentViewModel.class);
         mViewModel.getLogroActivos().observe(this, logros -> {
             mAdapter.swap(logros);
         });

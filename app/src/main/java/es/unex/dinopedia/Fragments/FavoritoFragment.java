@@ -16,15 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.unex.dinopedia.AppContainer;
-import es.unex.dinopedia.ViewModel.MainActivityViewModel;
+import es.unex.dinopedia.ViewModel.FavoritoFragmentViewModel;
 import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Adapters.DinosaurioAdapter;
 import es.unex.dinopedia.Interfaz.MainActivityInterface;
 import es.unex.dinopedia.MyApplication;
-import es.unex.dinopedia.Networking.DataSource;
-import es.unex.dinopedia.Networking.Repository;
 import es.unex.dinopedia.R;
-import es.unex.dinopedia.roomdb.DinopediaDatabase;
 
 
 public class FavoritoFragment extends Fragment {
@@ -34,6 +31,7 @@ public class FavoritoFragment extends Fragment {
     private DinosaurioAdapter mAdapter;
     private final Context context;
     private List<Dinosaurio> dinoList;
+    private FavoritoFragmentViewModel mViewModel;
 
     public FavoritoFragment(Context cont) {
         context = cont;
@@ -45,7 +43,7 @@ public class FavoritoFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppContainer appContainer = ((MyApplication) FavoritoFragment.this.getActivity().getApplication()).appContainer;
-        MainActivityViewModel mViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory)appContainer.factory).get(MainActivityViewModel.class);
+        mViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory)appContainer.favoritoFragmentFactory).get(FavoritoFragmentViewModel.class);
         mViewModel.getDinosFavoritos().observe(this, dinosaurios -> {
             mAdapter.swap(dinosaurios);
             dinoList=dinosaurios;
@@ -82,8 +80,7 @@ public class FavoritoFragment extends Fragment {
 
     public void comprobarLogro(){
         if (dinoList.size() > 0) {
-            Repository mRepository = Repository.getInstance(DinopediaDatabase.getInstance(context).getDinosaurioDao(), DinopediaDatabase.getInstance(context).getLogroDao(), DataSource.getInstance());
-            mRepository.comprobarLogros("Marca tu primer dinosaurio favorito");
+            mViewModel.comprobarLogros();
         }
     }
 }

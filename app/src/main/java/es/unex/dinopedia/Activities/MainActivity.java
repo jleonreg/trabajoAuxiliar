@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
 
+import es.unex.dinopedia.AppContainer;
 import es.unex.dinopedia.AppExecutors.AppExecutors;
+import es.unex.dinopedia.MyApplication;
 import es.unex.dinopedia.Networking.LocalDataSource;
 import es.unex.dinopedia.Networking.LocalRepository;
 import es.unex.dinopedia.Model.Dinosaurio;
@@ -21,28 +24,29 @@ import es.unex.dinopedia.Interfaz.MainActivityInterface;
 import es.unex.dinopedia.Networking.DataSource;
 import es.unex.dinopedia.Networking.Repository;
 import es.unex.dinopedia.R;
+import es.unex.dinopedia.ViewModel.IniciarSesionActivityViewModel;
+import es.unex.dinopedia.ViewModel.MainActivityViewModel;
 import es.unex.dinopedia.databinding.ActivityMainBinding;
 import es.unex.dinopedia.roomdb.DinopediaDatabase;
 
 public class MainActivity extends AppCompatActivity implements MainActivityInterface {
 
-    ActivityMainBinding binding;
-    FragmentManager fragmentManager = getSupportFragmentManager();
-    Repository mRepository;
-    LocalRepository mLocalRepository;
+    private ActivityMainBinding binding;
+    private FragmentManager fragmentManager = getSupportFragmentManager();
+
+    private MainActivityViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mRepository = Repository.getInstance(DinopediaDatabase.getInstance(MainActivity.this).getDinosaurioDao(), DinopediaDatabase.getInstance(MainActivity.this).getLogroDao(), DataSource.getInstance());
-        mLocalRepository = LocalRepository.getInstance(DinopediaDatabase.getInstance(MainActivity.this).getHistorialCombateDao(), DinopediaDatabase.getInstance(MainActivity.this).getUsuarioDao(), LocalDataSource.getInstance());
+        AppContainer appContainer = ((MyApplication) getApplication()).appContainer;
+        mViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory)appContainer.mainFactory).get(MainActivityViewModel.class);
 
         AppExecutors.getInstance().diskIO().execute(() -> {
-            mRepository.limpiar();
-            mLocalRepository.limpiar();
-            mRepository.quitarFavoritos();
+            mViewModel.limpiar();
+            mViewModel.quitarFavoritos();
         });
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());

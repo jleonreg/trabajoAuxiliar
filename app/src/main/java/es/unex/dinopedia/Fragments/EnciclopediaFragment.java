@@ -16,15 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.unex.dinopedia.AppContainer;
-import es.unex.dinopedia.ViewModel.MainActivityViewModel;
+import es.unex.dinopedia.ViewModel.EnciclopediaFragmentViewModel;
 import es.unex.dinopedia.Model.Dinosaurio;
 import es.unex.dinopedia.Adapters.DinosaurioAdapter;
 import es.unex.dinopedia.Interfaz.MainActivityInterface;
 import es.unex.dinopedia.MyApplication;
-import es.unex.dinopedia.Networking.DataSource;
-import es.unex.dinopedia.Networking.Repository;
 import es.unex.dinopedia.R;
-import es.unex.dinopedia.roomdb.DinopediaDatabase;
 
 public class EnciclopediaFragment extends Fragment {
 
@@ -34,7 +31,7 @@ public class EnciclopediaFragment extends Fragment {
     private Context context;
     private List<Dinosaurio> dinoList;
     private Spinner opciones;
-    private Repository mRepository;
+    private EnciclopediaFragmentViewModel mViewModel;
 
     public EnciclopediaFragment(){
     }
@@ -43,19 +40,18 @@ public class EnciclopediaFragment extends Fragment {
         context = cont;
         dinoList=new ArrayList<>();
         mAdapter = new DinosaurioAdapter(context, item -> {});
-        mRepository = Repository.getInstance(DinopediaDatabase.getInstance(context).getDinosaurioDao(), DinopediaDatabase.getInstance(context).getLogroDao(), DataSource.getInstance());
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppContainer appContainer = ((MyApplication) EnciclopediaFragment.this.getActivity().getApplication()).appContainer;
-        MainActivityViewModel mViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory)appContainer.factory).get(MainActivityViewModel.class);
+        mViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory)appContainer.enciclopediaFragmentFactory).get(EnciclopediaFragmentViewModel.class);
         mViewModel.getDinos().observe(this, dinosaurios -> {
             mAdapter.swap(dinosaurios);
             dinoList=dinosaurios;
         });
-        mRepository.getDinosOpciones().observe(this, dinosauriosOpciones -> mAdapter.swap(dinosauriosOpciones));
+        mViewModel.getDinosOpciones().observe(this, dinosauriosOpciones -> mAdapter.swap(dinosauriosOpciones));
     }
 
     @Override
@@ -92,7 +88,7 @@ public class EnciclopediaFragment extends Fragment {
 
         Button bAplicar = viewMain.findViewById(R.id.bAplicar);
         bAplicar.setOnClickListener(v -> {
-           mRepository.setFiltro(opciones.getSelectedItem().toString());
+           mViewModel.setFiltro(opciones.getSelectedItem().toString());
         });
     }
 
